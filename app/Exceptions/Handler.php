@@ -38,4 +38,17 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+        // retorna uma resposta JSON quando a exceção UnauthorizedHttpException é lançada
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException) {
+            return response()->json([
+                'status' => 'Unauthorized.'
+            ], 401);
+        }
+
+        // retorna a resposta padrão para outras exceções
+        return parent::render($request, $exception);
+    }
 }
