@@ -28,3 +28,9 @@ Route::prefix('unit')->middleware('jwt.auth')->group(function (){
     Route::get('get', [\App\Http\Controllers\UnitController::class, 'get']);
     Route::post('update', [\App\Http\Controllers\UnitController::class, 'update']);
 });
+
+Route::prefix('emissionFactor')->middleware('jwt.auth')->group(function (){
+    Route::post('set', [\App\Http\Controllers\EmissionFactorController::class, 'set']);
+    Route::get('get', [\App\Http\Controllers\EmissionFactorController::class, 'get']);
+    Route::post('update', [\App\Http\Controllers\EmissionFactorController::class, 'update']);
+});
