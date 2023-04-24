@@ -34,3 +34,21 @@ Route::prefix('emissionFactor')->middleware('jwt.auth')->group(function (){
     Route::get('get', [\App\Http\Controllers\EmissionFactorController::class, 'get']);
     Route::post('update', [\App\Http\Controllers\EmissionFactorController::class, 'update']);
 });
+
+Route::prefix('emissionSource')->middleware('jwt.auth')->group(function (){
+    Route::post('set', [\App\Http\Controllers\EmissionSourceController::class, 'set']);
+    Route::get('get', [\App\Http\Controllers\EmissionSourceController::class, 'get']);
+    Route::post('update', [\App\Http\Controllers\EmissionSourceController::class, 'update']);
+});
+
+Route::prefix('period')->middleware('jwt.auth')->group(function (){
+    Route::post('set', [\App\Http\Controllers\PeriodController::class, 'set']);
+    Route::get('get', [\App\Http\Controllers\PeriodController::class, 'get']);
+    Route::post('update', [\App\Http\Controllers\PeriodController::class, 'update']);
+});
+
+Route::prefix('emission')->middleware('jwt.auth')->group(function (){
+    Route::post('set', [\App\Http\Controllers\EmissionController::class, 'set']);
+    Route::get('get', [\App\Http\Controllers\EmissionController::class, 'get']);
+    Route::post('update', [\App\Http\Controllers\EmissionController::class, 'update']);
+});
