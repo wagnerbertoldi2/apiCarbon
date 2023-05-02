@@ -26,11 +26,17 @@ class PropertyController extends Controller{
 
     public function get(Request $request){
         if($request->id){
-            $property = PropertyModel::find($request->id);
+            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
+                ->select('property.*', 'category.name as categoryName')
+                ->where('property.id', '=', $request->id)
+                ->get();
             return response()->json($property, 200);
         } else {
-            $properties = PropertyModel::all();
-            return response()->json($properties, 200);
+            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
+                ->select('property.*', 'category.name as categoryName')
+                ->get();
+
+            return response()->json($property, 200);
         }
     }
 

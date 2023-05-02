@@ -20,7 +20,10 @@ class EmissionController extends Controller{
     }
 
     public function get(Request $request){
-        if($request->id){
+        if($request->has('EmissionSourceId')){
+            $emission = EmissionModel::where('EmissionSourceId', $request->EmissionSourceId)->get();
+            return response()->json($emission, 200);
+        } elseif($request->has('id')){
             $emission = EmissionModel::find($request->id);
             return response()->json($emission, 200);
         } else {

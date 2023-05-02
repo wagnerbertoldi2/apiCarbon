@@ -19,11 +19,23 @@ class EmissionSourceController extends Controller{
     }
 
     public function get(Request $request){
-        if($request->has('id')){
+        if($request->has('PropertyId')){
+            $emissionSource= EmissionSourceModel::join('EmissionFactor', 'EmissionSource.EmissionFactorId', '=', 'EmissionFactor.id')
+                ->select('EmissionSource.*', 'EmissionFactor.Name as EmissionFactorName')
+                ->where('EmissionSource.PropertyId', $request->PropertyId)
+                ->get();
+            return response()->json($emissionSource, 200);
+        } elseif($request->has('id')){
+            $emissionSource= EmissionSourceModel::join('EmissionFactor', 'EmissionSource.EmissionFactorId', '=', 'EmissionFactor.id')
+                ->select('EmissionSource.*', 'EmissionFactor.Name as EmissionFactorName')
+                ->where('EmissionSource.id', $request->id)
+                ->get();
             $emissionSource = EmissionSourceModel::find($request->id);
             return response()->json($emissionSource, 200);
         } else {
-            $emissionSource = EmissionSourceModel::all();
+            $emissionSource= EmissionSourceModel::join('EmissionFactor', 'EmissionSource.EmissionFactorId', '=', 'EmissionFactor.id')
+                ->select('EmissionSource.*', 'EmissionFactor.Name as EmissionFactorName')
+                ->get();
             return response()->json($emissionSource, 200);
         }
     }
