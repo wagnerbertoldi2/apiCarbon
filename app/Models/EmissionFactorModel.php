@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmissionFactorModel extends Model{
     use HasFactory;
 
-    protected $table = 'EmissionFactor';
+    protected $table = 'emissionfactor';
 
     protected $fillable = [
         'id',
