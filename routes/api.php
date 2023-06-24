@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
-Route::post('/reset', 'App\Http\Controllers\Auth\ResetPasswordController@reset')->name('password.update');
+//Route::post('/reset', 'App\Http\Controllers\Auth\ResetPasswordController@reset')->name('password.update');
 
 Route::prefix('user')->group(function (){
     Route::post('set', [\App\Http\Controllers\UserController::class, 'set']);
