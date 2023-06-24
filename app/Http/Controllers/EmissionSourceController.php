@@ -20,21 +20,21 @@ class EmissionSourceController extends Controller{
 
     public function get(Request $request){
         if($request->has('PropertyId')){
-            $emissionSource= EmissionSourceModel::join('EmissionFactor', 'EmissionSource.EmissionFactorId', '=', 'EmissionFactor.id')
-                ->select('EmissionSource.*', 'EmissionFactor.Name as EmissionFactorName')
-                ->where('EmissionSource.PropertyId', $request->PropertyId)
+            $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName')
+                ->where('emissionsource.PropertyId', $request->PropertyId)
                 ->get();
             return response()->json($emissionSource, 200);
         } elseif($request->has('id')){
-            $emissionSource= EmissionSourceModel::join('EmissionFactor', 'EmissionSource.EmissionFactorId', '=', 'EmissionFactor.id')
-                ->select('EmissionSource.*', 'EmissionFactor.Name as EmissionFactorName')
-                ->where('EmissionSource.id', $request->id)
+            $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName')
+                ->where('emissionsource.id', $request->id)
                 ->get();
             $emissionSource = EmissionSourceModel::find($request->id);
             return response()->json($emissionSource, 200);
         } else {
-            $emissionSource= EmissionSourceModel::join('EmissionFactor', 'EmissionSource.EmissionFactorId', '=', 'EmissionFactor.id')
-                ->select('EmissionSource.*', 'EmissionFactor.Name as EmissionFactorName')
+            $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName')
                 ->get();
             return response()->json($emissionSource, 200);
         }
