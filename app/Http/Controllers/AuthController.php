@@ -21,4 +21,8 @@ class AuthController extends Controller{
 
         return response()->json(compact('token'));
     }
+
+    public function resetPassword(Request $request){
+
+    }
 }

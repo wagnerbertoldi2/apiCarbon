@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Auth;
 class UserController extends Controller{
 
     public function me(Request $request){
@@ -35,4 +36,13 @@ class UserController extends Controller{
         return response()->json($user, 201);
     }
 
+    public function verificarSenha(Request $request){
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Senha correta', "value" => 1], 200);
+        } else {
+            return response()->json(['message' => 'Senha incorreta', "value" => 0], 401);
+        }
+    }
 }

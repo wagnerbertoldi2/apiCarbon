@@ -1,15 +1,16 @@
-ht<?php
+<?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
-//Route::post('/reset', 'App\Http\Controllers\Auth\ResetPasswordController@reset')->name('password.update');
 
 Route::prefix('user')->group(function (){
     Route::post('set', [\App\Http\Controllers\UserController::class, 'set']);
     Route::middleware('jwt.auth')->get('get', [\App\Http\Controllers\UserController::class, 'me']);
+    Route::post('validate-password', [\App\Http\Controllers\UserController::class, 'verificarSenha'])->middleware('jwt.auth');
 });
 
 Route::prefix('category')->middleware('jwt.auth')->group(function (){
