@@ -11,6 +11,7 @@ Route::prefix('user')->group(function (){
     Route::post('set', [\App\Http\Controllers\UserController::class, 'set']);
     Route::middleware('jwt.auth')->get('get', [\App\Http\Controllers\UserController::class, 'me']);
     Route::post('validate-password', [\App\Http\Controllers\UserController::class, 'verificarSenha'])->middleware('jwt.auth');
+    Route::post('update', [\App\Http\Controllers\UserController::class, 'update'])->middleware('jwt.auth');
 });
 
 Route::prefix('category')->middleware('jwt.auth')->group(function (){

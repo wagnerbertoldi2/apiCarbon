@@ -45,4 +45,22 @@ class UserController extends Controller{
             return response()->json(['message' => 'Senha incorreta', "value" => 0], 401);
         }
     }
+
+    public function update(Request $request){
+        $user = User::find($request['id']);
+        $user->FirstName = $request['firstName'];
+        $user->LastName = $request['lastName'];
+        $user->CPF = $request['cpf'];
+        $user->RG = $request['rg'];
+        $user->CNPJ = $request['cnpj'];
+        $user->email = $request['email'];
+
+        if($request['password'] != '' || !empty($request['password'])) {
+            $user->password = bcrypt($request['password']);
+        }
+
+        $user->save();
+
+        return response()->json($user, 201);
+    }
 }
