@@ -17,10 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes([
+    'register' => false,
+    'verify' => false,
+    'reset' => false
+]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get("teste", function(){
-    Mail::to("wagner.bertoldi@gmail.com")->send(new \App\Mail\resetSenha());
-    echo "email enviado!";
-});
