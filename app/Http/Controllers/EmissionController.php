@@ -4,30 +4,55 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\EmissionModel;
+use Illuminate\Support\Facades\DB;
 class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
-        $path = $file->store('attachments');
+        $path = $file->store('public/attachments');
 
         $emission = new EmissionModel();
-        $emission->Attachment = $file->getClientOriginalName();
-        $emission->Amount = $request->Amount;
-        $emission->InitialPeriod = $request->InitialPeriod;
-        $emission->FinalPeriod = $request->FinalPeriod;
+        $emission->Attachment = basename($path);
+        $emission->Amount = $request->amount;
         $emission->EmissionSourceId = $request->EmissionSourceId;
+        $emission->Month = $request->month;
+        $emission->Year = $request->year;
+        $emission->Semester = $request->semester;
         $emission->save();
         return response()->json($emission, 201);
     }
 
     public function get(Request $request){
         if($request->has('EmissionSourceId')){
-            $emission = EmissionModel::where('EmissionSourceId', $request->EmissionSourceId)->get();
+            $emission = DB::table('emission as E')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'S.Name as factor')
+                ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
+                ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
+                ->leftJoin('property as PP', 'PP.id', '=', 'S.PropertyId')
+                ->leftJoin('emissionfactor as F', 'F.id', '=', 'S.EmissionFactorId')
+                ->where('emission.EmissionSourceId', '=', $request->EmissionSourceId)
+                ->get();
             return response()->json($emission, 200);
-        } elseif($request->has('id')){
-            $emission = EmissionModel::find($request->id);
+        } elseif($request->has('emissionFactorId') && $request->has('propertyId')){
+            $emission = DB::table('emission as E')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'S.Name as factor')
+                ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
+                ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
+                ->leftJoin('property as PP', 'PP.id', '=', 'S.PropertyId')
+                ->leftJoin('emissionfactor as F', 'F.id', '=', 'S.EmissionFactorId')
+                ->where('S.EmissionFactorId', $request->emissionFactorId)
+                ->where('PP.id', $request->propertyId)
+                ->get();
+
             return response()->json($emission, 200);
         } else {
-            $emission = EmissionModel::all();
+            $emission = DB::table('emission as E')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', 'P.Name as period', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'PP.Name as property', 'S.Name as factor')
+                ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
+                ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
+                ->leftJoin('property as PP', 'PP.id', '=', 'S.PropertyId')
+                ->leftJoin('emissionfactor as F', 'F.id', '=', 'S.EmissionFactorId')
+                ->get();
+
             return response()->json($emission, 200);
         }
     }

@@ -13,9 +13,10 @@ class EmissionModel extends Model{
     protected $fillable = [
         'Attachment',
         'Amount',
-        'InitialPeriod',
-        'FinalPeriod',
         'EmissionSourceId',
+        'Month',
+        'Year',
+        'Semester',
         'created_at',
         'updated_at'
     ];

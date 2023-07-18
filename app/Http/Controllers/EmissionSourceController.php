@@ -27,10 +27,10 @@ class EmissionSourceController extends Controller{
             return response()->json($emissionSource, 200);
         } elseif($request->has('id')){
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
-                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName')
+                ->join('period', 'emissionsource.PeriodId', '=', 'period.id')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'period.Name as Period')
                 ->where('emissionsource.id', $request->id)
                 ->get();
-            $emissionSource = EmissionSourceModel::find($request->id);
             return response()->json($emissionSource, 200);
         } else {
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
