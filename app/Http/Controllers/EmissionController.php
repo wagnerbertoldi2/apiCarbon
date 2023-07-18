@@ -22,7 +22,18 @@ class EmissionController extends Controller{
     }
 
     public function get(Request $request){
-        if($request->has('EmissionSourceId')){
+        if($request->has('EmissionSourceId') && $request->has('propertyId')){
+            $emission = DB::table('emission AS E')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'ES.Name as factor')
+                ->leftJoin('emissionsource AS ES', 'ES.id', '=', 'E.EmissionSourceId')
+                ->leftJoin('period AS P', 'P.id', '=', 'ES.PeriodId')
+                ->leftJoin('Property AS PP', 'PP.id', '=', 'ES.PropertyId')
+                ->where('ES.PropertyId', '=', $request->propertyId)
+                ->where('E.EmissionSourceId', '=', $request->EmissionSourceId)
+                ->orderBy('E.created_at', 'desc')
+                ->get();
+            return response()->json($emission, 200);
+        } elseif($request->has('EmissionSourceId')){
             $emission = DB::table('emission as E')
                 ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'S.Name as factor')
                 ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
@@ -31,18 +42,6 @@ class EmissionController extends Controller{
                 ->leftJoin('emissionfactor as F', 'F.id', '=', 'S.EmissionFactorId')
                 ->where('emission.EmissionSourceId', '=', $request->EmissionSourceId)
                 ->get();
-            return response()->json($emission, 200);
-        } elseif($request->has('emissionFactorId') && $request->has('propertyId')){
-            $emission = DB::table('emission as E')
-                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'S.Name as factor')
-                ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
-                ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
-                ->leftJoin('property as PP', 'PP.id', '=', 'S.PropertyId')
-                ->leftJoin('emissionfactor as F', 'F.id', '=', 'S.EmissionFactorId')
-                ->where('S.EmissionFactorId', $request->emissionFactorId)
-                ->where('PP.id', $request->propertyId)
-                ->get();
-
             return response()->json($emission, 200);
         } else {
             $emission = DB::table('emission as E')

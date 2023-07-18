@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\codeModel;
 use App\Models\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CodigoNumericoEmail;
 class UserController extends Controller{
 
     public function me(Request $request){
@@ -63,4 +67,58 @@ class UserController extends Controller{
 
         return response()->json($user, 201);
     }
+
+    public function getCodeEmail(Request $request){
+        $email= $request['email'];
+
+        $user = User::where('email', $email)->first();
+
+        if($user == null){
+            return response()->json(['msg'=>'error'], 400);
+        } else {
+            $iduser = $user->id;
+            $code = rand(100000, 999999);
+
+            $objCode= new codeModel();
+            $objCode->code = $code;
+            $objCode->iduser = $iduser;
+            $objCode->save();
+
+            Mail::to($email)->send(new CodigoNumericoEmail(['code' => $code]));
+
+            return response()->json(['msg'=>'success'], 201);
+        }
+    }
+
+    public function passReset(Request $request)
+    {
+        // Validação dos dados recebidos.
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        // Busca o usuário pelo e-mail.
+        $user = User::where('email', $request->email)->first();
+
+        // Verifica se o usuário existe e se o código está correto.
+        if (!$user || $user->code->code !== $request->code) {
+            return response()->json([
+                'message' => 'Código ou e-mail inválido.'
+            ], 400);
+        }
+
+        // Atualiza a senha.
+        $user->password = Hash::make($request->newpass);
+        $user->save();
+
+        // Remove o código de redefinição.
+        $user->code->delete();
+
+        return response()->json([
+            'message' => 'Senha redefinida com sucesso.'
+        ]);
+    }
+
 }

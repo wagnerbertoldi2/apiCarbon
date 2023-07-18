@@ -3,4 +3,4 @@
 <hr />
 
 <p>Seu código de acesso é:</p>
-<p>12 34 56</p>
+<p>{{$details['code']}}</p>
