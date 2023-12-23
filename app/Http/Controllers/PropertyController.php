@@ -25,21 +25,19 @@ class PropertyController extends Controller{
     }
 
     public function get(Request $request){
-        return response()->json($request->id, 200);
+        if(isset($request->id)){
+            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
+                ->select('property.*', 'category.name as categoryName')
+                ->where('property.id', '=', $request->id)
+                ->get();
+            return response()->json($property, 200);
+        } else {
+            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
+                ->select('property.*', 'category.name as categoryName')
+                ->get();
 
-//        if(isset($request->id)){
-//            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
-//                ->select('property.*', 'category.name as categoryName')
-//                ->where('property.id', '=', $request->id)
-//                ->get();
-//            return response()->json($property, 200);
-//        } else {
-//            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
-//                ->select('property.*', 'category.name as categoryName')
-//                ->get();
-//
-//            return response()->json($property, 200);
-//        }
+            return response()->json($property, 200);
+        }
     }
 
     public function update(PropertyRequest $request){
