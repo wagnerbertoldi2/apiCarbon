@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\DB;
 class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
-        $path = $file->store('public/attachments');
+
+        if(count($file)>=1) {
+            $path = $file->store('public/attachments');
+        }
 
         $emission = new EmissionModel();
         $emission->Attachment = basename($path);
