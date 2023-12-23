@@ -9,11 +9,9 @@ class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
 
-        return response()->json($file, 201);
-
-//        if(count($file)>=1) {
-//            $path = $file->store('public/attachments');
-//        }
+        if(!empty($file)) {
+            $path = $file->store('public/attachments');
+        }
 
         $emission = new EmissionModel();
         $emission->Attachment = basename($path);
