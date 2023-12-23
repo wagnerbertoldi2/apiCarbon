@@ -27,7 +27,7 @@ class EmissionController extends Controller{
                 ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/storage/attachments/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'ES.Name as factor')
                 ->leftJoin('emissionsource AS ES', 'ES.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period AS P', 'P.id', '=', 'ES.PeriodId')
-                ->leftJoin('Property AS PP', 'PP.id', '=', 'ES.PropertyId')
+                ->leftJoin('property AS PP', 'PP.id', '=', 'ES.PropertyId')
                 ->where('ES.PropertyId', '=', $request->propertyId)
                 ->where('E.EmissionSourceId', '=', $request->EmissionSourceId)
                 ->orderBy('E.created_at', 'desc')
