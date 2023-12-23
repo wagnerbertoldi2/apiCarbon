@@ -25,7 +25,7 @@ class PropertyController extends Controller{
     }
 
     public function get(Request $request){
-        return response()->json($request, 200);
+        return response()->json($request->id, 200);
 
 //        if(isset($request->id)){
 //            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
