@@ -9,9 +9,10 @@ class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
 
-        if(count($file)>=1) {
-            $path = $file->store('public/attachments');
-        }
+        dd($file);
+//        if(count($file)>=1) {
+//            $path = $file->store('public/attachments');
+//        }
 
         $emission = new EmissionModel();
         $emission->Attachment = basename($path);
