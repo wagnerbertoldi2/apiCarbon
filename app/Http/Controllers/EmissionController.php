@@ -14,7 +14,11 @@ class EmissionController extends Controller{
         }
 
         $emission = new EmissionModel();
-        $emission->Attachment = basename($path);
+
+        if(!empty($file)) {
+            $emission->Attachment = basename($path);
+        }
+
         $emission->Amount = $request->amount;
         $emission->EmissionSourceId = $request->EmissionSourceId;
         $emission->Month = $request->month;
