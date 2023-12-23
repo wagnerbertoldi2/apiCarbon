@@ -23,8 +23,9 @@ class EmissionController extends Controller{
         $emission->EmissionSourceId = $request->EmissionSourceId;
         $emission->Month = $request->month;
         $emission->Year = $request->year;
-        //$emission->Semester = $request->semester;
+        $emission->Semester = ($request->month * 1) <= 6 ? 1 : 2;
         $emission->save();
+
         return response()->json($emission, 201);
     }
 
