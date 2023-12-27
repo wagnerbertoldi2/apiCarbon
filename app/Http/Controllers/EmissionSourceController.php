@@ -23,14 +23,14 @@ class EmissionSourceController extends Controller{
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
                 ->join('period', 'emissionsource.PeriodId', '=', 'period.id')
                 ->join('unit', 'emissionsource.UnitId', '=', 'unit.id')
-                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'period.Name as Period', 'unit.Name as unitName', 'unit.NameInternal as unit')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'period.Name as Period', 'unit.Name as unitName', 'unit.InternalName as unit')
                 ->where('emissionsource.PropertyId', $request->PropertyId)
                 ->where('emissionsource.id', $request->id)
                 ->get();
             return response()->json(["oi",$emissionSource], 200);
         } elseif($request->has('PropertyId')){
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
-                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'unit.Name as unitName', 'unit.NameInternal as unit')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'unit.Name as unitName', 'unit.InternalName as unit')
                 ->join('unit', 'emissionsource.UnitId', '=', 'unit.id')
                 ->where('emissionsource.PropertyId', $request->PropertyId)
                 ->get();
@@ -39,13 +39,13 @@ class EmissionSourceController extends Controller{
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
                 ->join('period', 'emissionsource.PeriodId', '=', 'period.id')
                 ->join('unit', 'emissionsource.UnitId', '=', 'unit.id')
-                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'period.Name as Period', 'unit.Name as unitName', 'unit.NameInternal as unit')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'period.Name as Period', 'unit.Name as unitName', 'unit.InternalName as unit')
                 ->where('emissionsource.id', $request->id)
                 ->get();
             return response()->json($emissionSource, 200);
         } else {
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
-                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'unit.Name as unitName', 'unit.NameInternal as unit')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'unit.Name as unitName', 'unit.InternalName as unit')
                 ->join('unit', 'emissionsource.UnitId', '=', 'unit.id')
                 ->get();
             return response()->json($emissionSource, 200);
