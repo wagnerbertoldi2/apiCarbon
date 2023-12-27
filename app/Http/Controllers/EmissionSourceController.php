@@ -22,7 +22,8 @@ class EmissionSourceController extends Controller{
         if($request->has('PropertyId') && $request->has('id')){
             $emissionSource= EmissionSourceModel::join('emissionfactor', 'emissionsource.EmissionFactorId', '=', 'emissionfactor.id')
                 ->join('period', 'emissionsource.PeriodId', '=', 'period.id')
-                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'period.Name as Period')
+                ->join('unit', 'emissonfactor.UnitId', '=', 'unit.id')
+                ->select('emissionsource.*', 'emissionfactor.Name as EmissionFactorName', 'emissionfactor.Icon_react as icon', 'period.Name as Period', 'unit.InternalName')
                 ->where('emissionsource.PropertyId', $request->PropertyId)
                 ->where('emissionsource.id', $request->id)
                 ->get();
