@@ -10,8 +10,8 @@ use App\Http\Controllers\CoordenadasController;
 class PropertyController extends Controller{
     public function set(PropertyRequest $request){
         $obj= new CoordenadasController();
-        $obj->setCep("96211-550");
-        $obj->setNum(567);
+        $obj->setCep($request->CEP);
+        $obj->setNum($request->Number);
         $res= $obj->obterCoordenadasNominatim();
         return response()->json($res, 201);
 
