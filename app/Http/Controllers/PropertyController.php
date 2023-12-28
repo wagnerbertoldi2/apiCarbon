@@ -13,7 +13,6 @@ class PropertyController extends Controller{
         $obj->setCep($request->CEP);
         $obj->setNum($request->Number);
         $res= json_decode($obj->obterCoordenadasNominatim());
-        return response()->json($res, 401);
 
         $property = new PropertyModel();
         $property->Name = $request->Name;
@@ -27,8 +26,8 @@ class PropertyController extends Controller{
         $property->UF = $request->UF;
         $property->UserId = $request->UserId;
         $property->CategoryId = $request->CategoryId;
-        $property->latitude= $res['latitude'];
-        $property->longitude= $res['longitude'];
+        $property->latitude= $res['original']['latitude'];
+        $property->longitude= $res['original']['longitude'];
         $property->save();
         return response()->json($property, 201);
     }
