@@ -43,10 +43,7 @@ class CoordenadasController extends Controller{
 
         $client = new Client();
         $response = $client->get($enderecoFormatado);
-        $resposta = json_decode($response->getBody(), true);
-
-        return response()->json($resposta, 401);
-        $dados = json_decode($resposta, true);
+        $dados = json_decode($response->getBody(), true);
 
         if ($dados && !empty($dados)) {
             $resultado = $dados[0];
