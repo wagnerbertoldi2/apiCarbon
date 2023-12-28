@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PropertyRequest;
 use Illuminate\Http\Request;
 use App\Models\PropertyModel;
+use App\Http\Controllers\CoordenadasController;
 
 class PropertyController extends Controller{
     public function set(PropertyRequest $request){
+        $obj= new CoordenadasController();
+        $obj->setCep("96211-550");
+        $obj->setNum(567);
+        $res= $obj->obterCoordenadasNominatim();
+        return response->json($res, 201);
+
         $property = new PropertyModel();
         $property->Name = $request->Name;
         $property->Registration = $request->Registration;
