@@ -22,7 +22,7 @@ class CoordenadasController extends Controller{
     public function setNum($num){
         $this->num= $num;
     }
-    private function getEndereco(){
+    private function setEndereco(){
         $cep= $this->cep;
         $url = "https://viacep.com.br/ws/{$cep}/json/";
         $resposta = file_get_contents($url);
@@ -35,6 +35,7 @@ class CoordenadasController extends Controller{
     }
 
     public function obterCoordenadasNominatim() {
+        $this->setEndereco();
         $endereco = $this->logradouro.", ".$this->num.", ".$this->localidade.", ".$this->uf;
         return response()->json($endereco, 201);
 
