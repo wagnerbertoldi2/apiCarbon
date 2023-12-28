@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class CoordenadasController extends Controller{
 
@@ -39,10 +40,10 @@ class CoordenadasController extends Controller{
         $endereco = $this->logradouro.", ".$this->num.", ".$this->localidade.", ".$this->uf;
 
         $enderecoFormatado = htmlspecialchars_decode("https://nominatim.openstreetmap.org/search?q=".urlencode("$endereco").'&format=json');
-        $ch = curl_init($enderecoFormatado);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $resposta = curl_exec($ch);
-        curl_close($ch);
+
+        $client = new Client();
+        $response = $client->get($enderecoFormatado);
+        $resposta = json_decode($response->getBody(), true);
 
         return response()->json($resposta, 401);
         $dados = json_decode($resposta, true);
