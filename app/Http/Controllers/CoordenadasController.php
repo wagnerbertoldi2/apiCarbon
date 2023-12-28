@@ -37,7 +37,6 @@ class CoordenadasController extends Controller{
     public function obterCoordenadasNominatim() {
         $this->setEndereco();
         $endereco = $this->logradouro.", ".$this->num.", ".$this->localidade.", ".$this->uf;
-        return response()->json($endereco, 201);
 
         $enderecoFormatado = urlencode($endereco);
         $url = "https://nominatim.openstreetmap.org/search?format=json&q={$enderecoFormatado}";
@@ -53,12 +52,17 @@ class CoordenadasController extends Controller{
             $this->latitude= $latitude;
             $this->longitude= $longitude;
 
-            return [
+            $resp= [
                 'latitude' => $latitude,
                 'longitude' => $longitude,
             ];
+
+            $status= 201;
         } else {
-            return null;
+            $resp= null;
+            $status= 401;
         }
+
+        return response()->json($resp, $status);
     }
 }
