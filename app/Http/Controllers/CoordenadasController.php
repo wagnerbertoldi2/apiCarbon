@@ -64,6 +64,6 @@ class CoordenadasController extends Controller{
             $status= 401;
         }
 
-        return response()->json($resp, $status);
+        return $resp;
     }
 }
