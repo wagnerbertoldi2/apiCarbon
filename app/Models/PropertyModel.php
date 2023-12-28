@@ -22,6 +22,8 @@ class PropertyModel extends Model{
         'UF',
         'UserId',
         'CategoryId',
+        'latitude',
+        'longitude',
         'created_at',
         'updated_at'
     ];
