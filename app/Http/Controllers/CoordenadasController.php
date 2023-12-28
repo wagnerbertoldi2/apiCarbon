@@ -38,8 +38,8 @@ class CoordenadasController extends Controller{
         $this->setEndereco();
         $endereco = $this->logradouro.", ".$this->num.", ".$this->localidade.", ".$this->uf;
 
-        $enderecoFormatado = urlencode($endereco);
-        $resposta = file_get_contents("https://nominatim.openstreetmap.org/search?format=json&q=$enderecoFormatado");
+        $enderecoFormatado = urlencode("https://nominatim.openstreetmap.org/search?format=json&q=$endereco");
+        $resposta = file_get_contents($enderecoFormatado);
         return response()->json($resposta, 401);
         $dados = json_decode($resposta, true);
 
