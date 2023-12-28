@@ -39,7 +39,11 @@ class CoordenadasController extends Controller{
         $endereco = $this->logradouro.", ".$this->num.", ".$this->localidade.", ".$this->uf;
 
         $enderecoFormatado = htmlspecialchars_decode("https://nominatim.openstreetmap.org/search?q=".urlencode("$endereco").'&format=json');
-        $resposta = file_get_contents($enderecoFormatado);
+        $ch = curl_init($enderecoFormatado);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $resposta = curl_exec($ch);
+        curl_close($ch);
+
         return response()->json($resposta, 401);
         $dados = json_decode($resposta, true);
 
