@@ -13,7 +13,7 @@ class PropertyController extends Controller{
         $obj->setCep("96211-550");
         $obj->setNum(567);
         $res= $obj->obterCoordenadasNominatim();
-        return response->json($res, 201);
+        return response()->json($res, 201);
 
         $property = new PropertyModel();
         $property->Name = $request->Name;
