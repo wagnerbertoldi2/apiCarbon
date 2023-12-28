@@ -40,8 +40,9 @@ class CoordenadasController extends Controller{
 
         $enderecoFormatado = urlencode($endereco);
         $url = "https://nominatim.openstreetmap.org/search?format=json&q=$enderecoFormatado";
+        return response()->json($url, 401);
 
-        $resposta = file_get_contents(str_replace("&amp;","&",$url));
+        $resposta = file_get_contents($url);
         $dados = json_decode($resposta, true);
 
         if ($dados && !empty($dados)) {
