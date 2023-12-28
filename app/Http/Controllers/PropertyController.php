@@ -12,7 +12,8 @@ class PropertyController extends Controller{
         $obj= new CoordenadasController();
         $obj->setCep($request->CEP);
         $obj->setNum($request->Number);
-        $res= $obj->obterCoordenadasNominatim();
+        $res= json_decode($obj->obterCoordenadasNominatim());
+        return response()->json($res, 501);
 
         $property = new PropertyModel();
         $property->Name = $request->Name;
