@@ -6,7 +6,6 @@ use App\Http\Requests\PropertyRequest;
 use Illuminate\Http\Request;
 use App\Models\PropertyModel;
 use App\Http\Controllers\CoordenadasController;
-use App\Http\Controllers\Auth;
 
 class PropertyController extends Controller{
     public function set(PropertyRequest $request){
@@ -25,7 +24,7 @@ class PropertyController extends Controller{
         $property->NumberOfPeoples = $request->NumberOfPeoples;
         $property->Address = $request->Address;
         $property->UF = $request->UF;
-        $property->UserId = Auth::id();
+        $property->UserId = $request->UserId;
         $property->CategoryId = $request->CategoryId;
         $property->latitude= $res['latitude'];
         $property->longitude= $res['longitude'];
