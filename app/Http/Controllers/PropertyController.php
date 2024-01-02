@@ -24,7 +24,7 @@ class PropertyController extends Controller{
         $property->NumberOfPeoples = $request->NumberOfPeoples;
         $property->Address = $request->Address;
         $property->UF = $request->UF;
-        $property->UserId = $request->UserId;
+        $property->UserId = Auth::id();
         $property->CategoryId = $request->CategoryId;
         $property->latitude= $res['latitude'];
         $property->longitude= $res['longitude'];
