@@ -21,7 +21,7 @@ class PropertyRequest extends FormRequest{
             'NumberOfPeoples' => 'required|integer',
             'Address' => 'required|string',
             'UF' => 'required|string',
-            'UserId' => 'required|integer',
+            'UserId' => 'integer',
             'CategoryId' => 'required|integer'
         ];
     }
