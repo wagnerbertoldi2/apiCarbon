@@ -6,9 +6,16 @@ use App\Http\Requests\PropertyRequest;
 use Illuminate\Http\Request;
 use App\Models\PropertyModel;
 use App\Http\Controllers\CoordenadasController;
+use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller{
     public function set(PropertyRequest $request){
+        if (Auth::check()) {
+            $userId = Auth::id();
+        } else {
+            return response()->json(['error' => 'Usuário não autenticado'], 401);
+        }
+
         $obj= new CoordenadasController();
         $obj->setCep($request->CEP);
         $obj->setNum($request->Number);
@@ -24,7 +31,7 @@ class PropertyController extends Controller{
         $property->NumberOfPeoples = $request->NumberOfPeoples;
         $property->Address = $request->Address;
         $property->UF = $request->UF;
-        $property->UserId = $request->UserId;
+        $property->UserId = $userId;
         $property->CategoryId = $request->CategoryId;
         $property->latitude= $res['latitude'];
         $property->longitude= $res['longitude'];
