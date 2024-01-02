@@ -39,6 +39,12 @@ class PropertyController extends Controller{
                 ->where('property.id', '=', $request->id)
                 ->get();
             return response()->json($property, 200);
+        } elseif(isset($request->iduser)){
+            $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
+                ->select('property.*', 'category.name as categoryName')
+                ->where('property.UserId', '=', $request->iduser)
+                ->get();
+            return response()->json($property, 200);
         } else {
             $property = PropertyModel::join('category', 'property.CategoryId', '=', 'category.id')
                 ->select('property.*', 'category.name as categoryName')
