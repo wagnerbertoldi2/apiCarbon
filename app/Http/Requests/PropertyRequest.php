@@ -38,8 +38,17 @@ class PropertyRequest extends FormRequest{
 
     public function messages(){
         return [
-            'required' => 'O campo :attribute é obrigatório',
-            'unique' => 'Este imóvel já está registrado.',
+            'Name.required' => 'O campo Nome é obrigatório',
+            'Registration.required' => 'O campo Registro é obrigatório',
+            'CEP.required' => 'O campo CEP é obrigatório',
+            'City.required' => 'O campo Cidade é obrigatório',
+            'Number.required' => 'O campo Número é obrigatório',
+            'Number.unique' => 'Este imóvel já esta registrado.',
+            'NumberOfPeoples.required' => 'O campo Número de pessoas é obrigatório',
+            'Address.required' => 'O campo Endereço é obrigatório',
+            'UF.required' => 'O campo UF é obrigatório',
+            'UserId.required' => 'O campo Usuário é obrigatório',
+            'CategoryId.required' => 'O campo Categoria é obrigatório'
         ];
     }
 
