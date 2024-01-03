@@ -16,16 +16,19 @@ class PropertyRequest extends FormRequest{
 
         return [
             'Name' => 'required|string',
-            'Registration' => 'required|string',
-            'CEP' => 'required|string',
-            'City' => 'required|string',
-            'Number' => [
+            'Registration' => [
                 'required',
                 'string',
                 Rule::unique('property')
                     ->where('CEP', $this->input('CEP'))
                     ->where('Complement', $this->input('Complement'))
                     ->ignore($propertyId),
+            ],
+            'CEP' => 'required|string',
+            'City' => 'required|string',
+            'Number' => [
+                'required',
+                'string'
                 ],
             'Complement' => 'nullable|string',
             'NumberOfPeoples' => 'required|integer',
@@ -40,6 +43,7 @@ class PropertyRequest extends FormRequest{
         return [
             'Name.required' => 'O campo Nome é obrigatório',
             'Registration.required' => 'O campo Registro é obrigatório',
+            'Registration.unique' => 'Este imóvel já esta registrado.',
             'CEP.required' => 'O campo CEP é obrigatório',
             'City.required' => 'O campo Cidade é obrigatório',
             'Number.required' => 'O campo Número é obrigatório',
