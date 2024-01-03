@@ -22,7 +22,7 @@ class PropertyRequest extends FormRequest{
             'Number' => [
                 'required',
                 'string',
-                Rule::unique('properties')
+                Rule::unique('property')
                     ->where('CEP', $this->input('CEP'))
                     ->where('Complement', $this->input('Complement'))
                     ->ignore($propertyId),
