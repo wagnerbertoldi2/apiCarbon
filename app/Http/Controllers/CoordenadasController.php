@@ -56,12 +56,16 @@ class CoordenadasController extends Controller{
             $resp= [
                 'latitude' => $latitude,
                 'longitude' => $longitude,
+                'request'=> $enderecoFormatado,
+                'response'=> $response->getBody()
             ];
-
-            $status= 201;
         } else {
-            $resp= null;
-            $status= 401;
+            $resp= [
+                'latitude' => null,
+                'longitude' => null,
+                'request'=> $enderecoFormatado,
+                'response'=> $response->getBody()
+            ];
         }
 
         return $resp;
