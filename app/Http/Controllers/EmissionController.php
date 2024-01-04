@@ -69,6 +69,9 @@ class EmissionController extends Controller{
         $year= $request->year;
         $period= "#";
 
+        $meses= [1,2,3,4,5,6,7,8,9,10,11,12];
+        $months= [];
+
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
             ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
@@ -78,9 +81,16 @@ class EmissionController extends Controller{
 
         if(count($result)>=1){
             $period= $result[0]->period;
+
+            switch ($period){
+                case "Mensal":
+                    foreach ($result as $r){
+                        $months= $r;
+                    }
+            }
         }
 
-        return response()->json($period, 201);
+        return response()->json($months, 201);
     }
 
     public function update(Request $request){
