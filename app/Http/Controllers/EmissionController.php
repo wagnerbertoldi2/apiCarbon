@@ -88,25 +88,24 @@ class EmissionController extends Controller{
         if(count($result)>=1){
             $period= $result[0]->period;
 
-            switch ($period){
-                case "Mensal":
-                    foreach ($result as $r){
-                        $i= ($r->Month * 1) - 1;
-                        unset($meses[$i]);
-                    }
-                    $resp= $meses;
-                case "Semestral":
-                    foreach ($result as $r){
-                        $i= ($r->Semester * 1) - 1;
-                        unset($semestres[$i]);
-                    }
-                    $resp= $semestres;
-                case "Anual":
-                    foreach ($result as $r){
-                        $i= array_search($r->Year, $anos);
-                        unset($anos[$i]);
-                    }
-                    $resp= $anos;
+            if($period == "Mensal") {
+                foreach ($result as $r) {
+                    $i = ($r->Month * 1) - 1;
+                    unset($meses[$i]);
+                }
+                $resp = $meses;
+            } elseif($period == "Semestral") {
+                foreach ($result as $r) {
+                    $i = ($r->Semester * 1) - 1;
+                    unset($semestres[$i]);
+                }
+                $resp = $semestres;
+            } elseif($period == "Anual") {
+                foreach ($result as $r) {
+                    $i = array_search($r->Year, $anos);
+                    unset($anos[$i]);
+                }
+                $resp = $anos;
             }
         }
 
