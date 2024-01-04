@@ -89,9 +89,11 @@ class EmissionController extends Controller{
             $period= $result[0]->period;
 
             if($period == "Mensal") {
+                $in= 0;
                 foreach ($result as $r) {
                     $i = ($r->Month * 1) - 1;
                     unset($meses[$i]);
+                    $in++;
                 }
                 $resp = $meses;
             } elseif($period == "Semestral") {
@@ -109,7 +111,7 @@ class EmissionController extends Controller{
             }
         }
 
-        return response()->json([$period,$resp,$result], 201);
+        return response()->json([$period,$in,$resp,$result], 201);
     }
 
     public function update(Request $request){
