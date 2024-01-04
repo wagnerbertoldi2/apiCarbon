@@ -85,12 +85,13 @@ class EmissionController extends Controller{
             switch ($period){
                 case "Mensal":
                     foreach ($result as $r){
-                        $months= $r;
+                        $i= ($r->Month * 1) - 1;
+                        unset($meses[$i]);
                     }
             }
         }
 
-        return response()->json($months, 201);
+        return response()->json($meses, 201);
     }
 
     public function update(Request $request){
