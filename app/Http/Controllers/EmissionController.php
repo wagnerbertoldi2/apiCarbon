@@ -75,11 +75,7 @@ class EmissionController extends Controller{
             ->where('E.Year', '=', $year)
             ->get();
 
-        if(count($result) >= 1){
-            $period= $result[0]['period'];
-        }
-
-        return response()->json([$result, $period], 201);
+        return response()->json($result, 201);
     }
 
     public function update(Request $request){
