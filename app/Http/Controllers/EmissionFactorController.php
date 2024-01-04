@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EmissionFactorRequest;
 use Illuminate\Http\Request;
 use App\Models\EmissionFactorModel;
+use Illuminate\Support\Facades\DB;
 class EmissionFactorController extends Controller{
     public function get(Request $request){
         if($request->has('id')){
