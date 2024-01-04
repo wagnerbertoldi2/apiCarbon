@@ -99,12 +99,16 @@ class EmissionController extends Controller{
                 $resultYears = DB::table('emission as E')
                     ->select('E.Year', DB::raw('count(E.Year) as nYear'))
                     ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
-                    ->where('S.PropertyId', '=', 5)
+                    ->where('S.PropertyId', '=', $idProperty)
                     ->groupBy('E.Year')
                     ->havingRaw('count(E.Year) <= 11')
                     ->get();
 
-                $resp = ["months" => $meses, "year"=>$resultYears];
+                foreach ($resultYears as $ry){
+                    $resultYear[]= $ry->Year;
+                }
+
+                $resp = ["months" => $meses, "year"=>$resultYear];
             } elseif($period == "Semestral") {
                 foreach ($result as $r) {
                     $i = ($r->Semester * 1) - 1;
