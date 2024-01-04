@@ -71,7 +71,12 @@ class EmissionController extends Controller{
 
         $meses= [1,2,3,4,5,6,7,8,9,10,11,12];
         $semestres= [1,2];
-        $months= [];
+        $anos= [];
+        $resp= [];
+
+        for($a=2022; $a<=(date("Y")*1); $a++){
+            $anos[]= $a;
+        }
 
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
@@ -91,17 +96,24 @@ class EmissionController extends Controller{
                     }
 
                     $resp= $meses;
-//                case "Semestral":
-//                    foreach ($result as $r){
-//                        $i= ($r->Semes * 1) - 1;
-//                        unset($semestres[$i]);
-//                    }
-//
-//                    $resp= $semestres;
+                case "Semestral":
+                    foreach ($result as $r){
+                        $i= ($r->Semester * 1) - 1;
+                        unset($semestres[$i]);
+                    }
+
+                    $resp= $semestres;
+                case "Anual":
+                    foreach ($result as $r){
+                        $i= array_search($r->Year, $anos);
+                        unset($anos[$i]);
+                    }
+
+                    $resp= $anos;
             }
         }
 
-        return response()->json($result, 201);
+        return response()->json([$resp,$result], 201);
     }
 
     public function update(Request $request){
