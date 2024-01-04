@@ -64,6 +64,24 @@ class EmissionController extends Controller{
         }
     }
 
+    public function getList(Request $request){
+        $idProperty= $request->idproperty;
+        $year= $request->year;
+
+        $result = DB::table('emission as E')
+            ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
+            ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
+            ->where('S.PropertyId', '=', $idProperty)
+            ->where('E.Year', '=', $year)
+            ->get();
+
+        if(count($result) >= 1){
+            $period= $result[0]['period'];
+        }
+
+        return response()->json([$result, $period], 201);
+    }
+
     public function update(Request $request){
         $emission = EmissionModel::find($request->id);
 
