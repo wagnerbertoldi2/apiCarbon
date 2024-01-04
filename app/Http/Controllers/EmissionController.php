@@ -95,23 +95,23 @@ class EmissionController extends Controller{
                     unset($meses[$i]);
                     $in++;
                 }
-                $resp = $meses;
+                $resp = ["months" => $meses, "year"=>$anos];
             } elseif($period == "Semestral") {
                 foreach ($result as $r) {
                     $i = ($r->Semester * 1) - 1;
                     unset($semestres[$i]);
                 }
-                $resp = $semestres;
+                $resp = ["semesters" => $semestres, "year"=>$anos];
             } elseif($period == "Anual") {
                 foreach ($result as $r) {
                     $i = array_search($r->Year, $anos);
                     unset($anos[$i]);
                 }
-                $resp = $anos;
+                $resp = ["year"=>$anos];
             }
         }
 
-        return response()->json([$period,$in,$resp,$result], 201);
+        return response()->json([$resp,$result], 201);
     }
 
     public function update(Request $request){
