@@ -91,13 +91,13 @@ class EmissionController extends Controller{
                     }
 
                     $resp= $meses;
-                case "Semestral":
-                    foreach ($result as $r){
-                        $i= ($r->Semes * 1) - 1;
-                        unset($semestres[$i]);
-                    }
-
-                    $resp= $semestres;
+//                case "Semestral":
+//                    foreach ($result as $r){
+//                        $i= ($r->Semes * 1) - 1;
+//                        unset($semestres[$i]);
+//                    }
+//
+//                    $resp= $semestres;
             }
         }
 
