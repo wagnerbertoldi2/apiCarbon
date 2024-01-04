@@ -70,6 +70,7 @@ class EmissionController extends Controller{
         $period= "#";
 
         $meses= [1,2,3,4,5,6,7,8,9,10,11,12];
+        $semestres= [1,2];
         $months= [];
 
         $result = DB::table('emission as E')
@@ -88,10 +89,19 @@ class EmissionController extends Controller{
                         $i= ($r->Month * 1) - 1;
                         unset($meses[$i]);
                     }
+
+                    $resp= $meses;
+                case "Semestral":
+                    foreach ($result as $r){
+                        $i= ($r->Semes * 1) - 1;
+                        unset($semestres[$i]);
+                    }
+
+                    $resp= $semestres;
             }
         }
 
-        return response()->json($meses, 201);
+        return response()->json($result, 201);
     }
 
     public function update(Request $request){
