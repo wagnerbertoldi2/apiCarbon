@@ -82,21 +82,21 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        $filteredResult2022= $res->filter(function ($item) {
+        $filteredResult[2022]= $res->filter(function ($item) {
             return $item->Year == 2022;
         });
 
-        $filteredResult2023= $res->filter(function ($item) {
+        $filteredResult[2023]= $res->filter(function ($item) {
             return $item->Year == 2023;
         });
 
-        $filteredResult2024= $res->filter(function ($item) {
+        $filteredResult[2024]= $res->filter(function ($item) {
             return $item->Year == 2024;
         });
 
         foreach ($years as $y) {
-            if (count($filteredResult$y) <= 1) {
-                $months[$y]= $filteredResult$y->pluck('Month',$y)->unique()->sort()->all();
+            if (count($filteredResult[$y]) <= 1) {
+                $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
                 if(count($months[$y]) <= 1) {
                     $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
                 } else {
@@ -108,7 +108,7 @@ class EmissionController extends Controller{
             }
         }
 
-        return response()->json([$result, $months, $missingMonths], 200);
+        return response()->json([$filteredResult, $months, $missingMonths], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
