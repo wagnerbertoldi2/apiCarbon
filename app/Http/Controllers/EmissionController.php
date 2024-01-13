@@ -76,8 +76,15 @@ class EmissionController extends Controller{
             ->orderBy('Month')
             ->get();
 
+        $res = collect($result);
 
-        return response()->json($result, 200);
+        $filteredResult = $res->filter(function ($item) {
+            return $item->Year == 2022;
+        });
+
+        $months2022 = $filteredResult->pluck('Month')->unique()->sort()->values();
+
+        return response()->json([$result,$res,$filteredResult,$months2022], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
