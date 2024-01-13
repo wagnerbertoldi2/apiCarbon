@@ -97,7 +97,7 @@ class EmissionController extends Controller{
                     $missingMonths[$y]= [];
                 }
             } else {
-                $months[$y]= ['vazio'];
+                $months[$y]= [];
                 $missingMonths[$y]= [];
             }
         }
