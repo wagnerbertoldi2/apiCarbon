@@ -100,7 +100,7 @@ class EmissionController extends Controller{
             }
         }
 
-        return response()->json([$months[2024], $missingMonths], 200);
+        return response()->json([$res, $months[2024], $missingMonths], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
