@@ -82,7 +82,7 @@ class EmissionController extends Controller{
             return $item->Year == $year;
         });
 
-        $months2024 = $filteredResult->pluck('Month',2024)->unique()->sort()->values();
+        $months2024 = $filteredResult->pluck('Month',2024)->unique()->sort()->all();
 
         return response()->json([$result,$res,$filteredResult,$months2024], 200);
     }
