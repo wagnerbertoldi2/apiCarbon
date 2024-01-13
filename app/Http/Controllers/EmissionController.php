@@ -87,7 +87,7 @@ class EmissionController extends Controller{
                 return $item->Year == $y;
             });
 
-            if (!empty($filteredResult[$y])) {
+            if (count($filteredResult[$y]) <= 1) {
                 $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
                 $missingMonths[$y]= array_values(array_diff(range(1, 12), $months));
             } else {
