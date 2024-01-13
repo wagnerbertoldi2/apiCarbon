@@ -67,7 +67,7 @@ class EmissionController extends Controller{
     public function getList(Request $request){
         $idProperty = $request->idproperty;
         $idEmissionSource= $request->idemissionsource;
-
+        $results= [];
         $currentYear = date('Y');
         $years = range(2022, $currentYear);
 
@@ -99,14 +99,14 @@ class EmissionController extends Controller{
                 }
             }
 
-            foreach ($missingMonths as $m){
-                return response()->json([$m], 200);
+            foreach ($missingMonths as $ano => $m){
+                $results[$ano] = $m;
             }
         } elseif($periodo == anual){
 
         }
 
-        return response()->json([$res, $missingMonths], 200);
+        return response()->json([$results], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
