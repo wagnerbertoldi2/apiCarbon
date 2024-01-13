@@ -78,13 +78,13 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        $filteredResult = $res->filter(function ($item) {
-            return $item->Year == 2022;
+        $filteredResult = $res->filter(function ($item, $year) {
+            return $item->Year == $year;
         });
 
-        $months2022 = $filteredResult->pluck('Month')->unique()->sort()->values();
+        $months2024 = $filteredResult->pluck('Month',2024)->unique()->sort()->values();
 
-        return response()->json([$result,$res,$filteredResult,$months2022], 200);
+        return response()->json([$result,$res,$filteredResult,$months2024], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
