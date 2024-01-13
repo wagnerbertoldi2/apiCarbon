@@ -83,7 +83,7 @@ class EmissionController extends Controller{
         $res = collect($result);
 
         foreach ($years as $y) {
-            $filteredResult = $res->filter(function ($item) {
+            $filteredResult = $res->filter(function ($item, $y) {
                 return $item->Year == $y;
             });
 
