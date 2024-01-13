@@ -70,6 +70,7 @@ class EmissionController extends Controller{
         $results= [];
         $currentYear = date('Y');
         $years = range(2022, $currentYear);
+        $meses= ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
@@ -101,7 +102,7 @@ class EmissionController extends Controller{
 
             foreach ($missingMonths as $ano => $m){
                 if(count($m) >= 1){
-                    $results[$ano] = $m;
+                    $results[$ano] = ["value" => $m, "month" => $meses[$m*1-1]];
                 }
             }
         } elseif($periodo == anual){
