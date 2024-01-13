@@ -87,12 +87,9 @@ class EmissionController extends Controller{
                 return $item->Year == $y;
             });
 
-            if (count($filteredResult[$y]) <= 1) {
+            if ($filteredResult[$y]->isNotEmpty()) {
                 $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
                 $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
-                if($y == 2024){
-                    return response()->json([$months[$y], $missingMonths], 200);
-                }
             } else {
                 $months[$y]= [];
                 $missingMonths[$y]= [];
