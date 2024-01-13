@@ -65,6 +65,21 @@ class EmissionController extends Controller{
     }
 
     public function getList(Request $request){
+        $idProperty = $request->idproperty;
+        $idEmissionSource= $request->idemissionsource;
+        $result = DB::table('emission as E')
+            ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
+            ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
+            ->where('S.PropertyId', '=', $idProperty)
+            ->where('S.id', '=', $idEmissionSource)
+            ->orderBy('Year')
+            ->orderBy('Month')
+            ->get();
+
+
+        return response()->json($result, 200);
+    }
+    public function getList2(Request $request){
         $idProperty= $request->idproperty;
         $year= $request->year;
         $period= "#";
