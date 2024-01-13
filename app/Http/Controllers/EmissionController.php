@@ -69,7 +69,7 @@ class EmissionController extends Controller{
         $idEmissionSource= $request->idemissionsource;
 
         $currentYear = date('Y');
-        $years = range(2022, $currentYear);
+        $years = range(2022, $currentYear*1+1);
 
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
