@@ -102,7 +102,8 @@ class EmissionController extends Controller{
 
             foreach ($missingMonths as $ano => $m){
                 if(count($m) >= 1){
-                    $results[$ano] = ["value" => $m, "month" => $meses[$m-1]];
+                    $im= ($m*1) - 1;
+                    $results[$ano] = ["value" => $m, "month" => $meses[$im]];
                 }
             }
         } elseif($periodo == anual){
