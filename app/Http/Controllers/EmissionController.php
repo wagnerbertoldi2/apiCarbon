@@ -103,8 +103,7 @@ class EmissionController extends Controller{
             foreach ($missingMonths as $ano => $ms){
                 if (count($ms) >= 1) {
                     foreach ($ms as $m) {
-                        return response()->json([$m], 200);
-                        //$results[$ano] = ["value" => $m, "month" => $meses[$m]];
+                        $results[$ano][$m] = ["value" => $m, "month" => $meses[$m]];
                     }
                 }
             }
