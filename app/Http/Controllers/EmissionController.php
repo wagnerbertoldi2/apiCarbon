@@ -90,7 +90,7 @@ class EmissionController extends Controller{
             if (count($filteredResult[$y]) <= 1) {
                 $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
                 if(count($months[$y]) <= 1) {
-                    $missingMonths[$y] = array_values(array_diff(range(1, 12), $months));
+                    $missingMonths[$y] = array_diff(range(1, 12), $months);
                 } else {
                     $missingMonths[$y]= [];
                 }
