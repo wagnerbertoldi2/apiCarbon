@@ -67,6 +67,10 @@ class EmissionController extends Controller{
     public function getList(Request $request){
         $idProperty = $request->idproperty;
         $idEmissionSource= $request->idemissionsource;
+
+        $currentYear = date('Y');
+        $years = range(2022, $currentYear);
+
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
             ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
@@ -78,14 +82,16 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        $filteredResult = $res->filter(function ($item) {
-            return $item->Year == 2024;
+        $filteredResult = $res->filter(function ($item, $year) {
+            return $item->Year == $year;
         });
 
-        $months2024 = $filteredResult->pluck('Month')->unique()->sort()->all();
-        $missingMonths = array_values(array_diff(range(1, 12), $months2024));
+        foreach ($years as $y) {
+            $months[$y] = $filteredResult->pluck('Month',$y)->unique()->sort()->all();
+            $missingMonths[$y] = array_values(array_diff(range(1, 12), $months));
+        }
 
-        return response()->json([$months2024, $missingMonths], 200);
+        return response()->json([$months, $missingMonths], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
