@@ -82,13 +82,13 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        foreach ($years as $y) {
-            $filteredResult[$y] = $res->filter(function ($item, $y) {
-                return $item->Year == $y;
-            });
+        $filteredResult= $res->filter(function ($item, $y) {
+            return $item->Year == $y;
+        });
 
-            if (count($filteredResult[$y]) <= 1) {
-                $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
+        foreach ($years as $y) {
+            if (count($filteredResult) <= 1) {
+                $months[$y]= $filteredResult->pluck('Month',$y)->unique()->sort()->all();
                 if(count($months[$y]) <= 1) {
                     $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
                 } else {
