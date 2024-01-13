@@ -82,13 +82,18 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        $filteredResult = $res->filter(function ($item, $year) {
-            return $item->Year == $year;
-        });
-
         foreach ($years as $y) {
-            $months[$y] = $filteredResult->pluck('Month',$y)->unique()->sort()->all();
-            $missingMonths[$y] = array_values(array_diff(range(1, 12), $months));
+            $filteredResult = $res->filter(function ($item) {
+                return $item->Year == $y;
+            });
+
+            if ($filteredResult->isNotEmpty()) {
+                $months[$y]= $filteredResult->pluck('Month')->unique()->sort()->all();
+                $missingMonths[$y]= array_values(array_diff(range(1, 12), $months));
+            } else {
+                $months[$y]= [];
+                $missingMonths[$y]= [];
+            }
         }
 
         return response()->json([$months, $missingMonths], 200);
