@@ -82,18 +82,28 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        foreach ($years as $y) {
-            $filteredResult[$y] = $res->filter(function ($item) use ($y) {
-                return $item->Year == $y;
-            });
+        $periodo = strtolower($res->first()->period);
 
-            if ($filteredResult[$y]->isNotEmpty()) {
-                $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
-                $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
-            } else {
-                $months[$y]= [];
-                $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+        if($periodo == "mensal") {
+            foreach ($years as $y) {
+                $filteredResult[$y] = $res->filter(function ($item) use ($y) {
+                    return $item->Year == $y;
+                });
+
+                if ($filteredResult[$y]->isNotEmpty()) {
+                    $months[$y] = $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
+                    $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                } else {
+                    $months[$y] = [];
+                    $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                }
             }
+
+            foreach ($missingMonths as $m){
+                return response()->json([$m], 200);
+            }
+        } elseif($periodo == anual){
+
         }
 
         return response()->json([$res, $missingMonths], 200);
