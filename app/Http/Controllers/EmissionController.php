@@ -87,11 +87,11 @@ class EmissionController extends Controller{
                 return $item->Year == $y;
             });
 
-            if ($filteredResult[$y]->isNotEmpty()) {
+            if (!empty($filteredResult[$y])) {
                 $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
                 $missingMonths[$y]= array_values(array_diff(range(1, 12), $months));
             } else {
-                $months[$y]= [];
+                $months[$y]= ['vazio'];
                 $missingMonths[$y]= [];
             }
         }
