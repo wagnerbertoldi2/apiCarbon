@@ -82,17 +82,11 @@ class EmissionController extends Controller{
 
         $res = collect($result);
 
-        $filteredResult[2022]= $res->filter(function ($item) {
-            return $item->Year == 2022;
-        });
-
-        $filteredResult[2023]= $res->filter(function ($item) {
-            return $item->Year == 2023;
-        });
-
-        $filteredResult[2024]= $res->filter(function ($item) {
-            return $item->Year == 2024;
-        });
+        foreach ($years as $y) {
+            $filteredResult[$y] = $res->filter(function ($item, $y) {
+                return $item->Year == $y;
+            });
+        }
 
         foreach ($years as $y) {
             if (count($filteredResult[$y]) <= 1) {
