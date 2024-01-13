@@ -92,7 +92,7 @@ class EmissionController extends Controller{
                 $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
             } else {
                 $months[$y]= [];
-                $missingMonths[$y]= [];
+                $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
             }
         }
 
