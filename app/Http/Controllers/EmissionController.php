@@ -83,8 +83,9 @@ class EmissionController extends Controller{
         });
 
         $months2024 = $filteredResult->pluck('Month')->unique()->sort()->all();
+        $missingMonths = array_diff(range(1, 12), $months2024);
 
-        return response()->json([$months2024], 200);
+        return response()->json([$months2024, $missingMonths], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
