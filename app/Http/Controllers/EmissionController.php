@@ -100,10 +100,12 @@ class EmissionController extends Controller{
                 }
             }
 
-            foreach ($missingMonths as $ano => $m){
-                if(count($m) >= 1){
-                    return response()->json([$m[0]], 200);
-                    //$results[$ano] = ["value" => $m, "month" => $meses[$m]];
+            foreach ($missingMonths as $ano => $ms){
+                foreach ($ms as $m) {
+                    if (count($m) >= 1) {
+                        return response()->json([$m], 200);
+                        //$results[$ano] = ["value" => $m, "month" => $meses[$m]];
+                    }
                 }
             }
         } elseif($periodo == anual){
