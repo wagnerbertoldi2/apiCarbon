@@ -83,7 +83,7 @@ class EmissionController extends Controller{
         });
 
         $months2024 = $filteredResult->pluck('Month')->unique()->sort()->all();
-        $missingMonths = array_diff(range(1, 12), $months2024);
+        $missingMonths = array_values(array_diff(range(1, 12), $months2024));
 
         return response()->json([$months2024, $missingMonths], 200);
     }
