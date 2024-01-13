@@ -86,9 +86,7 @@ class EmissionController extends Controller{
             $filteredResult[$y] = $res->filter(function ($item) use ($y) {
                 return $item->Year == $y;
             });
-        }
 
-        foreach ($years as $y) {
             if (count($filteredResult[$y]) <= 1) {
                 $months[$y]= $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
                 if(count($months[$y]) <= 1) {
