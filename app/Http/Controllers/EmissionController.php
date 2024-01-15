@@ -19,14 +19,16 @@ class EmissionController extends Controller{
             $emission->Attachment = basename($path);
         }
 
-        $emission->Amount = $request->amount;
-        $emission->EmissionSourceId = $request->EmissionSourceId;
-        $emission->Month = $request->month;
-        $emission->Year = $request->year;
-        $emission->Semester = ($request->month * 1) <= 6 ? 1 : 2;
-        $emission->save();
+        $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
-        return response()->json($emission, 201);
+//        $emission->Amount = $request->amount;
+//        $emission->EmissionSourceId = $request->EmissionSourceId;
+//        $emission->Month = $request->month;
+//        $emission->Year = $request->year;
+//        $emission->Semester = ($request->month * 1) <= 6 ? 1 : 2;
+//        $emission->save();
+
+        return response()->json($dados, 201);
     }
 
     public function get(Request $request){
@@ -67,6 +69,11 @@ class EmissionController extends Controller{
     public function getList(Request $request){
         $idProperty = $request->idproperty;
         $idEmissionSource= $request->idemissionsource;
+
+        return response()->json($this->getList2($idProperty, $idEmissionSource, 'json'), 200);
+    }
+
+    public function getList2($idProperty, $idEmissionSource, $tipo="json"){
         $results= [];
         $currentYear = date('Y');
         $years = range(2022, $currentYear);
@@ -95,10 +102,18 @@ class EmissionController extends Controller{
 
                     if ($filteredResult[$y]->isNotEmpty()) {
                         $months[$y] = $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
-                        $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                        if($tipo == 'json') {
+                            $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                        } else {
+                            $missingMonths[$y] = $months[$y];
+                        }
                     } else {
                         $months[$y] = [];
-                        $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                        if($tipo == 'json') {
+                            $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                        } else {
+                            $missingMonths[$y] = $months[$y];
+                        }
                     }
                 }
 
@@ -120,10 +135,18 @@ class EmissionController extends Controller{
 
                     if ($filteredResult[$y]->isNotEmpty()) {
                         $months[$y] = $filteredResult[$y]->pluck('Semester')->unique()->sort()->all();
-                        $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
+                        if($tipo == 'json') {
+                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $semesters[$y]));
+                        } else {
+                            $missingMonths[$y] = $semesters[$y];
+                        }
                     } else {
                         $months[$y] = [];
-                        $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
+                        if($tipo == 'json') {
+                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $semesters[$y]));
+                        } else {
+                            $missingMonths[$y] = $semesters[$y];
+                        }
                     }
                 }
 
@@ -136,9 +159,9 @@ class EmissionController extends Controller{
                 }
             }
 
-            return response()->json(["anos" => $results, "periodo" => $periodo], 200);
+            return ["anos" => $results, "periodo" => $periodo];
         } else {
-            return response()->json([], 200);
+            return [];
         }
     }
 
