@@ -28,7 +28,7 @@ class EmissionController extends Controller{
 //        $emission->Semester = ($request->month * 1) <= 6 ? 1 : 2;
 //        $emission->save();
 
-        return response()->json([$dados, $dados['anos']['2023'], $dados['periodo']], 201);
+        return response()->json([$dados, $dados['anos']['2023'][$request->month], $dados['periodo']], 201);
     }
 
     public function get(Request $request){
