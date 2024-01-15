@@ -71,6 +71,7 @@ class EmissionController extends Controller{
         $currentYear = date('Y');
         $years = range(2022, $currentYear);
         $meses= [1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',10=>'Outubro',11=>'Novembro',12=>'Dezembro'];
+        $semesters= [1=>"Primeiro", 2=>"Segundo"];
 
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
@@ -128,7 +129,7 @@ class EmissionController extends Controller{
                 foreach ($missingMonths as $ano => $ms) {
                     if (count($ms) >= 1) {
                         foreach ($ms as $m) {
-                            $results[$ano][$m] = ["value" => $m, "semester" => $meses[$m]];
+                            $results[$ano][$m] = ["value" => $m, "semester" => $semesters[$m]];
                         }
                     }
                 }
@@ -138,68 +139,6 @@ class EmissionController extends Controller{
         } else {
             return response()->json([], 200);
         }
-    }
-    public function getList2(Request $request){
-        $idProperty= $request->idproperty;
-        $year= $request->year;
-        $period= "#";
-
-        $meses= [1,2,3,4,5,6,7,8,9,10,11,12];
-        $semestres= [1,2];
-        $anos= [];
-        $resp= [];
-
-        for($a=2022; $a<=(date("Y")*1); $a++){
-            $anos[]= $a;
-        }
-
-        $result = DB::table('emission as E')
-            ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
-            ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
-            ->where('S.PropertyId', '=', $idProperty)
-            ->where('E.Year', '=', $year)
-            ->get();
-
-        if(count($result)>=1){
-            $period= $result[0]->period;
-
-            if($period == "Mensal") {
-                $in= 0;
-                foreach ($result as $r) {
-                    $i = ($r->Month * 1) - 1;
-                    unset($meses[$i]);
-                    $in++;
-                }
-
-                $resultYears = DB::table('emission as E')
-                    ->select('E.Year', DB::raw('count(E.Year) as nYear'))
-                    ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
-                    ->where('S.PropertyId', '=', $idProperty)
-                    ->groupBy('E.Year')
-                    ->havingRaw('count(E.Year) <= 11')
-                    ->get();
-
-                foreach ($resultYears as $ry){
-                    $resultYear[]= $ry->Year;
-                }
-
-                $resp = ["months" => $meses, "year"=>$resultYear];
-            } elseif($period == "Semestral") {
-                foreach ($result as $r) {
-                    $i = ($r->Semester * 1) - 1;
-                    unset($semestres[$i]);
-                }
-                $resp = ["semesters" => $semestres, "year"=>$anos];
-            } elseif($period == "Anual") {
-                foreach ($result as $r) {
-                    $i = array_search($r->Year, $anos);
-                    unset($anos[$i]);
-                }
-                $resp = ["year"=>$anos];
-            }
-        }
-
-        return response()->json([$resp,$result], 201);
     }
 
     public function update(Request $request){
