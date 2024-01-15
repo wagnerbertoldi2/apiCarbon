@@ -70,7 +70,7 @@ class EmissionController extends Controller{
         $results= [];
         $currentYear = date('Y');
         $years = range(2022, $currentYear);
-        $meses= [1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',6=>'Junho',7=>'julho',8=>'agosto',9=>'setembro',10=>'outubro',11=>'novembro',12=>'dezembro'];
+        $meses= [1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',10=>'Outubro',11=>'Novembro',12=>'Dezembro'];
 
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
@@ -81,37 +81,40 @@ class EmissionController extends Controller{
             ->orderBy('Month')
             ->get();
 
-        $res = collect($result);
+        if($result->isNotEmpty()) {
+            $res = collect($result);
+            $periodo = strtolower($res->first()->period);
 
-        $periodo = strtolower($res->first()->period);
+            if ($periodo == "mensal") {
+                foreach ($years as $y) {
+                    $filteredResult[$y] = $res->filter(function ($item) use ($y) {
+                        return $item->Year == $y;
+                    });
 
-        if($periodo == "mensal") {
-            foreach ($years as $y) {
-                $filteredResult[$y] = $res->filter(function ($item) use ($y) {
-                    return $item->Year == $y;
-                });
-
-                if ($filteredResult[$y]->isNotEmpty()) {
-                    $months[$y] = $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
-                    $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
-                } else {
-                    $months[$y] = [];
-                    $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
-                }
-            }
-
-            foreach ($missingMonths as $ano => $ms){
-                if (count($ms) >= 1) {
-                    foreach ($ms as $m) {
-                        $results[$ano][$m] = ["value" => $m, "month" => $meses[$m]];
+                    if ($filteredResult[$y]->isNotEmpty()) {
+                        $months[$y] = $filteredResult[$y]->pluck('Month')->unique()->sort()->all();
+                        $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
+                    } else {
+                        $months[$y] = [];
+                        $missingMonths[$y] = array_values(array_diff(range(1, 12), $months[$y]));
                     }
                 }
+
+                foreach ($missingMonths as $ano => $ms) {
+                    if (count($ms) >= 1) {
+                        foreach ($ms as $m) {
+                            $results[$ano][$m] = ["value" => $m, "month" => $meses[$m]];
+                        }
+                    }
+                }
+            } elseif ($periodo == "anual") {
+
             }
-        } elseif($periodo == anual){
 
+            return response()->json(["anos" => $results], 200);
+        } else {
+            return response()->json([], 200);
         }
-
-        return response()->json([$results], 200);
     }
     public function getList2(Request $request){
         $idProperty= $request->idproperty;
