@@ -110,6 +110,28 @@ class EmissionController extends Controller{
             } elseif ($periodo == "anual") {
                 $yearsRes =collect($result)->pluck('Year')->toArray();
                 $results= array_diff($years, $yearsRes);
+            } elseif ($periodo == "semestral") {
+                foreach ($years as $y) {
+                    $filteredResult[$y] = $res->filter(function ($item) use ($y) {
+                        return $item->Year == $y;
+                    });
+
+                    if ($filteredResult[$y]->isNotEmpty()) {
+                        $months[$y] = $filteredResult[$y]->pluck('Semester')->unique()->sort()->all();
+                        $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
+                    } else {
+                        $months[$y] = [];
+                        $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
+                    }
+                }
+
+                foreach ($missingMonths as $ano => $ms) {
+                    if (count($ms) >= 1) {
+                        foreach ($ms as $m) {
+                            $results[$ano][$m] = ["value" => $m, "semester" => $meses[$m]];
+                        }
+                    }
+                }
             }
 
             return response()->json(["anos" => $results], 200);
