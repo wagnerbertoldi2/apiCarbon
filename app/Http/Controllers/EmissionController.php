@@ -21,6 +21,10 @@ class EmissionController extends Controller{
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
+        if(array_key_exists($request->month, $dados['anos'][$request->ano])){
+            return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
+        }
+
 //        $emission->Amount = $request->amount;
 //        $emission->EmissionSourceId = $request->EmissionSourceId;
 //        $emission->Month = $request->month;
