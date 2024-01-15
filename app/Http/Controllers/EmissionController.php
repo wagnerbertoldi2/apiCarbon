@@ -108,7 +108,7 @@ class EmissionController extends Controller{
                     }
                 }
             } elseif ($periodo == "anual") {
-                $yearsRes = collect($result)->pluck('Year');
+                $yearsRes =collect($result)->pluck('Year')->toArray();
                 $results= array_diff($years, $yearsRes);
             }
 
