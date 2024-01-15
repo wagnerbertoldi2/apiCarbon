@@ -108,7 +108,8 @@ class EmissionController extends Controller{
                     }
                 }
             } elseif ($periodo == "anual") {
-
+                $yearsRes = collect($result)->pluck('Year');
+                $results= array_diff($years, $yearsRes);
             }
 
             return response()->json(["anos" => $results], 200);
