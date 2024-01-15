@@ -19,8 +19,7 @@ class EmissionController extends Controller{
             $emission->Attachment = basename($path);
         }
 
-        $dados= collect($this->getList2($request->idProperty, $request->EmissionSourceId, 'array'));
-        $res= $dados->has($request->year) && $dados[$request->year]->has($request->month);
+        $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
 //        $emission->Amount = $request->amount;
 //        $emission->EmissionSourceId = $request->EmissionSourceId;
@@ -29,7 +28,7 @@ class EmissionController extends Controller{
 //        $emission->Semester = ($request->month * 1) <= 6 ? 1 : 2;
 //        $emission->save();
 
-        return response()->json([$res, $dados], 201);
+        return response()->json([$dados, $dados[2024]], 201);
     }
 
     public function get(Request $request){
