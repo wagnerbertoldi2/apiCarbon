@@ -72,6 +72,7 @@ class EmissionController extends Controller{
         $years = range(2022, $currentYear);
         $meses= [1=>'Janeiro',2=>'Fevereiro',3=>'Março',4=>'Abril',5=>'Maio',6=>'Junho',7=>'Julho',8=>'Agosto',9=>'Setembro',10=>'Outubro',11=>'Novembro',12=>'Dezembro'];
         $semesters= [1=>"Primeiro", 2=>"Segundo"];
+        $periodo= "";
 
         $result = DB::table('emission as E')
             ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
@@ -135,7 +136,7 @@ class EmissionController extends Controller{
                 }
             }
 
-            return response()->json(["anos" => $results], 200);
+            return response()->json(["anos" => $results, "periodo" => $periodo], 200);
         } else {
             return response()->json([], 200);
         }
