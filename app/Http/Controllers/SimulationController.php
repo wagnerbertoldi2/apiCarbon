@@ -49,12 +49,12 @@ class SimulationController extends Controller{
             )
             ->where('E.PropertyId', '=', $PropertyId)
             ->where('E.EmissionFactorId', '=', $emissionFactorID)
-            ->fisrt();
+            ->get();
 
-        $lat= $dadosDB->lat;
-        $lon= $dadosDB->lon;
-        $period= strtolower($dadosDB->period);
-        $functionFactor= $dadosDB->functionFactor;
+        $lat= $dadosDB[0]->lat;
+        $lon= $dadosDB[0]->lon;
+        $period= strtolower($dadosDB[0]->period);
+        $functionFactor= $dadosDB[0]->functionFactor;
         $regionID= 1;
 
         return [$functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre];
