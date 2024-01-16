@@ -51,7 +51,7 @@ class SimulationController extends Controller{
             ->where('E.EmissionFactorId', '=', $emissionFactorID)
             ->get();
 
-        return $dadosDB;
+        return [$PropertyId, $emissionFactorID, $dadosDB];
 
         $lat= $dadosDB[0]->lat;
         $lon= $dadosDB[0]->lon;
