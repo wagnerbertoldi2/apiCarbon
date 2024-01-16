@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\EmissionModel;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\SimulationController;
 class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
@@ -21,22 +22,28 @@ class EmissionController extends Controller{
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
-        if($dados['periodo'] == 'mensal') {
-            if (array_key_exists($request->month, $dados['anos'][$request->year])) {
-                return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
-            }
-        } elseif($dados['periodo'] == 'anual') {
-            if (array_key_exists($request->year, $dados['anos'])) {
-                return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
-            }
-        }
+//        if($dados['periodo'] == 'mensal') {
+//            if (array_key_exists($request->month, $dados['anos'][$request->year])) {
+//                return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
+//            }
+//        } elseif($dados['periodo'] == 'anual') {
+//            if (array_key_exists($request->year, $dados['anos'])) {
+//                return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
+//            }
+//        }
+
+        $semester= empty($request->semester) ? (($request->month * 1) <= 6 ? 1 : 2) : $request->semester;
 
 //        $emission->Amount = $request->amount;
 //        $emission->EmissionSourceId = $request->EmissionSourceId;
 //        $emission->Month = $request->month;
 //        $emission->Year = $request->year;
-//        $emission->Semester = ($request->month * 1) <= 6 ? 1 : 2;
+//        $emission->Semester = $semester;
 //        $emission->save();
+
+        $obj= new SimulationController();
+        $resp= $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $request->amount, $request->year, $request->month, $semester);
+        return response()->json($resp, 201);
 
         return response()->json([$dados], 201);
     }
