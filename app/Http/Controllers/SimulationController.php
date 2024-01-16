@@ -51,6 +51,8 @@ class SimulationController extends Controller{
             ->where('E.EmissionFactorId', '=', $emissionFactorID)
             ->get();
 
+        return $dadosDB;
+
         $lat= $dadosDB[0]->lat;
         $lon= $dadosDB[0]->lon;
         $period= strtolower($dadosDB[0]->period);
