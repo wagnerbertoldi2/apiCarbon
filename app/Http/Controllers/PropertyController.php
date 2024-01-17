@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PropertyModel;
 use App\Http\Controllers\CoordenadasController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PropertyController extends Controller{
     public function set(PropertyRequest $request){
