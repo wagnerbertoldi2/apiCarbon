@@ -63,6 +63,11 @@ class PropertyController extends Controller{
         }
     }
 
+    public function getRegion(){
+        $regions= DB::table("region")->get();
+        return response()->json($regions, 201);
+    }
+
     public function update(PropertyRequest $request){
         $property = PropertyModel::find($request->id);
         $property->Name = $request->Name;

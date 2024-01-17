@@ -25,6 +25,7 @@ Route::prefix('category')->middleware('jwt.auth')->group(function (){
 Route::prefix('property')->middleware('jwt.auth')->group(function (){
     Route::post('set', [\App\Http\Controllers\PropertyController::class, 'set']);
     Route::get('get', [\App\Http\Controllers\PropertyController::class, 'get']);
+    Route::get('getRegion', [\App\Http\Controllers\PropertyController::class, 'getRegion']);
     Route::post('update', [\App\Http\Controllers\PropertyController::class, 'update']);
 });
 
