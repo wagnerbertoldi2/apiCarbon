@@ -153,9 +153,9 @@ class EmissionController extends Controller{
                     if ($filteredResult[$y]->isNotEmpty()) {
                         $months[$y] = $filteredResult[$y]->pluck('Semester')->unique()->sort()->all();
                         if($tipo == 'json') {
-                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $semesters[$y]));
+                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
                         } else {
-                            $missingMonths[$y] = $semesters[$y];
+                            $missingMonths[$y] = $months[$y];
                         }
                     } else {
                         $months[$y] = [];
