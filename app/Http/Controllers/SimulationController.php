@@ -16,7 +16,6 @@ class SimulationController extends Controller{
     public function __construct(){
         $obj= new EmissionFactorModel();
         $this->dadosDB= collect($obj->All());
-        return $this->dadosDB;
 
         $this->factors= [
             "SAHS"=> ["id"=>1, "value"=> $this->dadosDB->firstWhere('id', 1)->factor],
@@ -34,6 +33,8 @@ class SimulationController extends Controller{
             "PAIE"=> ["id"=>13, "value"=> $this->dadosDB->firstWhere('id', 13)->factor],
             "PMA"=> ["id"=>14, "value"=> $this->dadosDB->firstWhere('id', 14)->factor]
         ];
+
+        dd($this->factors);
     }
 
     public function setSimulation($PropertyId, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
@@ -211,7 +212,7 @@ class SimulationController extends Controller{
      */
     public function calcROC($value){
         $factorName= "ROC";
-        //$factor= $this->factors[$factorName]['value'];
+        $factor= $this->factors[$factorName]['value'];
         return ["ROC", $value];
         return ($value*$factor*$this->k2)/1000;
     }
