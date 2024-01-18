@@ -34,12 +34,12 @@ class EmissionController extends Controller{
 
         $semester= empty($request->semester) ? (($request->month * 1) <= 6 ? 1 : 2) : $request->semester;
 
-//        $emission->Amount = $request->amount;
-//        $emission->EmissionSourceId = $request->EmissionSourceId;
-//        $emission->Month = $request->month;
-//        $emission->Year = $request->year;
-//        $emission->Semester = $semester;
-//        $emission->save();
+        $emission->Amount = $request->amount;
+        $emission->EmissionSourceId = $request->EmissionSourceId;
+        $emission->Month = $request->month;
+        $emission->Year = $request->year;
+        $emission->Semester = $semester;
+        $emission->save();
 
         $obj= new SimulationController();
         $resp= $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $request->amount, $request->year, $request->month, $semester);
