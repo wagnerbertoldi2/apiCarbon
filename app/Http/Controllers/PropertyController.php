@@ -36,6 +36,7 @@ class PropertyController extends Controller{
         $property->CategoryId = $request->CategoryId;
         $property->latitude= $res['latitude'];
         $property->longitude= $res['longitude'];
+        $property->regionId= $request['RegionId'];
         $property->requestCoordinates= $res['request'];
         $property->responseCoordinates= $res['response'];
         $property->save();

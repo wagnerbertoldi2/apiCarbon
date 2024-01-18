@@ -15,6 +15,7 @@ class PropertyModel extends Model{
         'Registration',
         'CEP',
         'City',
+        'regionId',
         'Number',
         'Complement',
         'NumberOfPeoples',
