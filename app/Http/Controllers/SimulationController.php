@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\EmissionFactorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use DataTime;
 
 class SimulationController extends Controller{
     private $factors;
@@ -70,7 +69,7 @@ class SimulationController extends Controller{
 
         $arraySimulation = [];
 
-        $data = new DateTime("$ano-$mes-01");
+        $data = new \DateTime("$ano-$mes-01");
 
         for ($dia = 1; $dia <= $dias; $dia++) {
             $dataFormatada = $data->format('Y-m-d');
