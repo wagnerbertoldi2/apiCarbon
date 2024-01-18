@@ -18,27 +18,27 @@ class SimulationController extends Controller{
         $this->dadosDB= collect($obj->All());
 
         $this->factors= [
-            "SAHS"=> ["id"=>1, "value"=> $this->dadosDB->firstWhere('id', 1)->factor],
-            "SESF"=> ["id"=>2, "value"=> $this->dadosDB->firstWhere('id', 2)->factor],
-            "UBSM"=> ["id"=>3, "value"=> $this->dadosDB->firstWhere('id', 3)->factor],
-            "SITED"=> ["id"=>4, "value"=> $this->dadosDB->firstWhere('id', 4)->factor],
-            "RV"=> ["id"=>5, "value"=> $this->dadosDB->firstWhere('id', 5)->factor],
-            "RP"=> ["id"=>6, "value"=> $this->dadosDB->firstWhere('id', 6)->factor],
-            "RA"=> ["id"=>7, "value"=> $this->dadosDB->firstWhere('id', 7)->factor],
-            "ROC"=> ["id"=>8, "value"=> $this->dadosDB->firstWhere('id',8)->factor],
-            "RRO"=> ["id"=>9, "value"=> $this->dadosDB->firstWhere('id', 9)->factor],
-            "RPL"=> ["id"=>10, "value"=> $this->dadosDB->firstWhere('id', 10)->factor],
-            "RCC"=> ["id"=>11, "value"=> $this->dadosDB->firstWhere('id', 11)->factor],
-            "SCAC"=> ["id"=>12, "value"=> $this->dadosDB->firstWhere('id', 12)->factor],
-            "PAIE"=> ["id"=>13, "value"=> $this->dadosDB->firstWhere('id', 13)->factor],
-            "PMA"=> ["id"=>14, "value"=> $this->dadosDB->firstWhere('id', 14)->factor]
+            "SAHS"=> ["id"=>1, "value"=> $this->dadosDB->firstWhere('id', 1)->Factor],
+            "SESF"=> ["id"=>2, "value"=> $this->dadosDB->firstWhere('id', 2)->Factor],
+            "UBSM"=> ["id"=>3, "value"=> $this->dadosDB->firstWhere('id', 3)->Factor],
+            "SITED"=> ["id"=>4, "value"=> $this->dadosDB->firstWhere('id', 4)->Factor],
+            "RV"=> ["id"=>5, "value"=> $this->dadosDB->firstWhere('id', 5)->Factor],
+            "RP"=> ["id"=>6, "value"=> $this->dadosDB->firstWhere('id', 6)->Factor],
+            "RA"=> ["id"=>7, "value"=> $this->dadosDB->firstWhere('id', 7)->Factor],
+            "ROC"=> ["id"=>8, "value"=> $this->dadosDB->firstWhere('id',8)->Factor],
+            "RRO"=> ["id"=>9, "value"=> $this->dadosDB->firstWhere('id', 9)->Factor],
+            "RPL"=> ["id"=>10, "value"=> $this->dadosDB->firstWhere('id', 10)->Factor],
+            "RCC"=> ["id"=>11, "value"=> $this->dadosDB->firstWhere('id', 11)->Factor],
+            "SCAC"=> ["id"=>12, "value"=> $this->dadosDB->firstWhere('id', 12)->Factor],
+            "PAIE"=> ["id"=>13, "value"=> $this->dadosDB->firstWhere('id', 13)->Factor],
+            "PMA"=> ["id"=>14, "value"=> $this->dadosDB->firstWhere('id', 14)->Factor]
         ];
     }
 
     public function setSimulation($PropertyId, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
         $obj= new EmissionFactorModel();
         $this->dadosDB= collect($obj->All());
-        return [$this->dadosDB];
+        return [$this->dadosDB->firstWhere('id',8)->Factor];
 
         $dadosDB= DB::table('emissionsource AS E')
             ->leftJoin('emissionfactor AS F', 'F.id', '=', 'E.EmissionFactorId')
