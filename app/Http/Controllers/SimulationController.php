@@ -49,7 +49,7 @@ class SimulationController extends Controller{
                 DB::raw('CONCAT("calc", F.NameCode) AS functionFactor')
             )
             ->where('E.PropertyId', '=', $PropertyId)
-            ->where('E.EmissionFactorId', '=', $emissionFactorID)
+            ->where('E.id', '=', $emissionFactorID)
             ->get();
 
         $lat= $dadosDB[0]->lat;
