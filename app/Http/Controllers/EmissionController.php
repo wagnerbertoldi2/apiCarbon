@@ -153,16 +153,16 @@ class EmissionController extends Controller{
                     if ($filteredResult[$y]->isNotEmpty()) {
                         $months[$y] = $filteredResult[$y]->pluck('Semester')->unique()->sort()->all();
                         if($tipo == 'json') {
-                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
+                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $semesters[$y]));
                         } else {
-                            $missingMonths[$y] = $months[$y];
+                            $missingMonths[$y] = $semesters[$y];
                         }
                     } else {
                         $months[$y] = [];
                         if($tipo == 'json') {
-                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $months[$y]));
+                            $missingMonths[$y] = array_values(array_diff(range(1, 2), $semesters[$y]));
                         } else {
-                            $missingMonths[$y] = $months[$y];
+                            $missingMonths[$y] = $semesters[$y];
                         }
                     }
                 }
@@ -170,7 +170,7 @@ class EmissionController extends Controller{
                 foreach ($missingMonths as $ano => $ms) {
                     if (count($ms) >= 1) {
                         foreach ($ms as $m) {
-                            $results[$ano][$m] = ["value" => $m, "semester" => $months[$m]];
+                            $results[$ano][$m] = ["value" => $m, "semester" => $semesters[$m]];
                         }
                     }
                 }
