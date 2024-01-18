@@ -43,6 +43,7 @@ class SimulationController extends Controller{
             ->select(
                 'PP.latitude AS lat',
                 'PP.longitude AS lon',
+                'PP.regionId',
                 'P.Name AS period',
                 'F.NameCode',
                 DB::raw('CONCAT("calc", F.NameCode) AS functionFactor')
@@ -50,8 +51,6 @@ class SimulationController extends Controller{
             ->where('E.PropertyId', '=', $PropertyId)
             ->where('E.EmissionFactorId', '=', $emissionFactorID)
             ->get();
-
-        return [$PropertyId, $emissionFactorID, $dadosDB];
 
         $lat= $dadosDB[0]->lat;
         $lon= $dadosDB[0]->lon;
