@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EmissionFactorModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use DataTime;
 
 class SimulationController extends Controller{
     private $factors;
