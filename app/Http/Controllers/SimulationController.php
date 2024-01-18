@@ -38,6 +38,10 @@ class SimulationController extends Controller{
     }
 
     public function setSimulation($PropertyId, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
+        $obj= new EmissionFactorModel();
+        $this->dadosDB= collect($obj->All());
+        return [$this->dadosDB];
+
         $dadosDB= DB::table('emissionsource AS E')
             ->leftJoin('emissionfactor AS F', 'F.id', '=', 'E.EmissionFactorId')
             ->leftJoin('period AS P', 'P.id', '=', 'E.PeriodId')
