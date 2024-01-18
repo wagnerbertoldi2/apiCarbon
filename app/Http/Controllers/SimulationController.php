@@ -36,10 +36,6 @@ class SimulationController extends Controller{
     }
 
     public function setSimulation($PropertyId, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
-        $obj= new EmissionFactorModel();
-        $this->dadosDB= collect($obj->All());
-        return [$this->dadosDB->firstWhere('id',8)->Factor];
-
         $dadosDB= DB::table('emissionsource AS E')
             ->leftJoin('emissionfactor AS F', 'F.id', '=', 'E.EmissionFactorId')
             ->leftJoin('period AS P', 'P.id', '=', 'E.PeriodId')
@@ -67,7 +63,6 @@ class SimulationController extends Controller{
 
     public function getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre){
         $factorCalculado= $this->$functionFactor($valueFactor);
-        return $factorCalculado;
         $calcDario= $this->calcDiario($factorCalculado, $period, $ano, $mes, $semestre);
 
         $dias= $calcDario[1];
@@ -215,7 +210,6 @@ class SimulationController extends Controller{
     public function calcROC($value){
         $factorName= "ROC";
         $factor= $this->factors[$factorName]['value'];
-        return ["ROC", $value];
         return ($value*$factor*$this->k2)/1000;
     }
 
