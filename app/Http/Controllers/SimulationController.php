@@ -16,6 +16,7 @@ class SimulationController extends Controller{
     public function __construct(){
         $obj= new EmissionFactorModel();
         $this->dadosDB= collect($obj->All());
+        return $this->dadosDB;
 
         $this->factors= [
             "SAHS"=> ["id"=>1, "value"=> $this->dadosDB->firstWhere('id', 1)->factor],
