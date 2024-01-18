@@ -210,6 +210,7 @@ class SimulationController extends Controller{
     public function calcROC($value){
         $factorName= "ROC";
         $factor= $this->factors[$factorName]['value'];
+        return [(($value*$factor*$this->k2)/1000), $value, $factor, $this->k2];
         return ($value*$factor*$this->k2)/1000;
     }
 
