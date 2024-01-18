@@ -33,8 +33,6 @@ class SimulationController extends Controller{
             "PAIE"=> ["id"=>13, "value"=> $this->dadosDB->firstWhere('id', 13)->factor],
             "PMA"=> ["id"=>14, "value"=> $this->dadosDB->firstWhere('id', 14)->factor]
         ];
-
-        dd($this->factors);
     }
 
     public function setSimulation($PropertyId, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
