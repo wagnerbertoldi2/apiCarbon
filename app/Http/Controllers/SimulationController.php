@@ -64,7 +64,7 @@ class SimulationController extends Controller{
     public function getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre){
         $factorCalculado= $this->$functionFactor($valueFactor);
         $calcDario= $this->calcDiario($factorCalculado, $period, $ano, $mes, $semestre);
-        return $calcDario;
+        return [$factorCalculado, $period, $ano, $mes, $semestre];
 
         $dias= $calcDario[1];
         $amount= $calcDario[0];
