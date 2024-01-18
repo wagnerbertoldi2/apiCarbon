@@ -58,7 +58,7 @@ class SimulationController extends Controller{
         $functionFactor= $dadosDB[0]->functionFactor;
         $regionID= 1;
 
-        return [$functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre];
+        return $this->getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre);
     }
 
     public function getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre){
