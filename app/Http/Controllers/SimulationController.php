@@ -58,12 +58,14 @@ class SimulationController extends Controller{
         $functionFactor= $dadosDB[0]->functionFactor;
         $regionID= $dadosDB[0]->regionId;
 
-        return $this->getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre);
+        $dadosSimulation= $this->getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre);
+
+        DB::connection("mysqlSimulation")->table("simulation2")->insert($dadosSimulation);
+        return $dadosSimulation;
     }
 
     public function getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre){
         $factorCalculado= $this->$functionFactor($valueFactor);
-        return $factorCalculado;
         $calcDario= $this->calcDiario($factorCalculado, $period, $ano, $mes, $semestre);
 
         $dias= $calcDario[1];
@@ -211,7 +213,6 @@ class SimulationController extends Controller{
     public function calcROC($value){
         $factorName= "ROC";
         $factor= $this->factors[$factorName]['value'];
-        return [(($value*$factor*$this->k2)/1000), $value, $factor, $this->k2];
         return ($value*$factor*$this->k2)/1000;
     }
 
