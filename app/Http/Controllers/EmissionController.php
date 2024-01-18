@@ -170,7 +170,7 @@ class EmissionController extends Controller{
                 foreach ($missingMonths as $ano => $ms) {
                     if (count($ms) >= 1) {
                         foreach ($ms as $m) {
-                            $results[$ano][$m] = ["value" => $m, "semester" => $semesters[$m]];
+                            $results[$ano][$m] = ["value" => $m, "semester" => $months[$m]];
                         }
                     }
                 }
