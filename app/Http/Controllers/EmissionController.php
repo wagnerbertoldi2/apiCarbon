@@ -158,7 +158,7 @@ class EmissionController extends Controller{
                             $missingMonths[$y] = $semester[$y];
                         }
                     } else {
-                        $months[$y] = [];
+                        $semester[$y] = [];
                         if($tipo == 'json') {
                             $missingMonths[$y] = array_values(array_diff(range(1, 2), $semester[$y]));
                         } else {
