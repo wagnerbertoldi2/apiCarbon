@@ -35,7 +35,7 @@ class SimulationController extends Controller{
         ];
     }
 
-    public function setSimulation($PropertyId, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
+    public function setSimulation($PropertyId, $emissionSourceID, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
         $dadosDB= DB::table('emissionsource AS E')
             ->leftJoin('emissionfactor AS F', 'F.id', '=', 'E.EmissionFactorId')
             ->leftJoin('period AS P', 'P.id', '=', 'E.PeriodId')
@@ -49,7 +49,7 @@ class SimulationController extends Controller{
                 DB::raw('CONCAT("calc", F.NameCode) AS functionFactor')
             )
             ->where('E.PropertyId', '=', $PropertyId)
-            ->where('E.id', '=', $emissionFactorID)
+            ->where('E.id', '=', $emissionSourceID)
             ->get();
 
         $lat= $dadosDB[0]->lat;
@@ -58,13 +58,13 @@ class SimulationController extends Controller{
         $functionFactor= $dadosDB[0]->functionFactor;
         $regionID= $dadosDB[0]->regionId;
 
-        $dadosSimulation= $this->getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre);
+        $dadosSimulation= $this->getArraySimulation($functionFactor, $lat, $lon, $regionID, $period, $valueFactor, $ano, $mes, $semestre, $emissionFactorID);
 
         DB::connection("mysqlSimulation")->table("simulation")->insert($dadosSimulation);
         return $dadosSimulation;
     }
 
-    public function getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre){
+    public function getArraySimulation($functionFactor, $lat, $lon, $regionID, $period, $valueFactor, $ano, $mes, $semestre, $emissionFactorID){
         $factorCalculado= $this->$functionFactor($valueFactor);
         $calcDario= $this->calcDiario($factorCalculado, $period, $ano, $mes, $semestre);
 

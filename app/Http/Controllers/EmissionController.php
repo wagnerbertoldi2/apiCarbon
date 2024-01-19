@@ -55,7 +55,7 @@ class EmissionController extends Controller{
         $EmissionFactorId= DB::table("emissionsource")->select('EmissionFactorId')->where('id', $request->EmissionSourceId)->limit(1)->get();
 
         $obj = new SimulationController();
-        $resp = $obj->setSimulation($request->idProperty, $EmissionFactorId[0]->EmissionFactorId, $request->amount, $request->year, $request->month, $semester);
+        $resp = $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $EmissionFactorId[0]->EmissionFactorId, $request->amount, $request->year, $request->month, $semester);
 
         return response()->json(true, 201);
 
