@@ -22,20 +22,22 @@ class EmissionController extends Controller{
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
-        if($dados['periodo'] == 'mensal') {
-            if (array_key_exists($request->year, $dados['anos']) === true) {
-                if (array_search($request->month, array_column($dados['anos'][$request->year], 'value')) !== false) {
-                    return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
+        if($dados->isNotEmpty()) {
+            if ($dados['periodo'] == 'mensal') {
+                if (array_key_exists($request->year, $dados['anos']) === true) {
+                    if (array_search($request->month, array_column($dados['anos'][$request->year], 'value')) !== false) {
+                        return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
+                    }
                 }
-            }
-        } elseif($dados['periodo'] == 'anual') {
-            if (array_search($request->year, $dados['anos']) === false) {
-                return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
-            }
-        } elseif($dados['periodo'] == 'semestral'){
-            if (array_key_exists($request->year, $dados['anos']) === true) {
-                if (array_search($request->semester, array_column($dados['anos'][$request->year], 'value')) !== false) {
-                    return response()->json(["msg" => "Este ano e semestre já estão registrados ou não tem permissão para registra-lo."], 401);
+            } elseif ($dados['periodo'] == 'anual') {
+                if (array_search($request->year, $dados['anos']) === false) {
+                    return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
+                }
+            } elseif ($dados['periodo'] == 'semestral') {
+                if (array_key_exists($request->year, $dados['anos']) === true) {
+                    if (array_search($request->semester, array_column($dados['anos'][$request->year], 'value')) !== false) {
+                        return response()->json(["msg" => "Este ano e semestre já estão registrados ou não tem permissão para registra-lo."], 401);
+                    }
                 }
             }
         }
