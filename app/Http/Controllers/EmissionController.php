@@ -21,7 +21,7 @@ class EmissionController extends Controller{
         }
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
-        return response()->json($dados,401);
+//        return response()->json($dados,401);
 
         if($dados['periodo'] == 'mensal') {
             if (array_key_exists($request->month, $dados['anos'][$request->year])) {
@@ -32,7 +32,7 @@ class EmissionController extends Controller{
                 return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
             }
         } elseif($dados['periodo'] == 'semestral'){
-            if (array_key_exists($request->semester, $dados['anos'])) {
+            if ($this->verificaSemestreNoAno($dados, $request->year, $request->semester) === true) {
                 return response()->json(["msg" => "Este ano e semestre já estão registrados ou não tem permissão para registra-lo."], 401);
             }
         }
@@ -52,6 +52,16 @@ class EmissionController extends Controller{
 
         return response()->json([$dados], 201);
 
+    }
+
+    private function verificaSemestreNoAno($json, $ano, $semestre) {
+        $data = json_decode($json, true);
+
+        if (isset($data['anos'][$ano][$semestre])) {
+            return true;
+        }
+
+        return false;
     }
 
     public function get(Request $request){
