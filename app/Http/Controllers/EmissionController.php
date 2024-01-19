@@ -27,25 +27,29 @@ class EmissionController extends Controller{
                 return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
             }
         } elseif($dados['periodo'] == 'anual') {
-            if (array_key_exists($request->year, $dados['anos'])) {
+            if (array_key_exists($request->year, $dados['anos'][$request->year])) {
                 return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
             }
+        } elseif($dados['periodo'] == 'semestral'){
+            if (array_key_exists($request->semester, $dados['anos'])) {
+                return response()->json(["msg" => "Este ano e semestre já estão registrados ou não tem permissão para registra-lo."], 401);
+            }
+        } else {
+            $semester = empty($request->semester) ? (($request->month * 1) <= 6 ? 1 : 2) : $request->semester;
+
+            $emission->Amount = $request->amount;
+            $emission->EmissionSourceId = $request->EmissionSourceId;
+            $emission->Month = $request->month;
+            $emission->Year = $request->year;
+            $emission->Semester = $semester;
+            $emission->save();
+
+            $obj = new SimulationController();
+            $resp = $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $request->amount, $request->year, $request->month, $semester);
+            return response()->json($resp, 201);
+
+            return response()->json([$dados], 201);
         }
-
-        $semester= empty($request->semester) ? (($request->month * 1) <= 6 ? 1 : 2) : $request->semester;
-
-        $emission->Amount = $request->amount;
-        $emission->EmissionSourceId = $request->EmissionSourceId;
-        $emission->Month = $request->month;
-        $emission->Year = $request->year;
-        $emission->Semester = $semester;
-        $emission->save();
-
-        $obj= new SimulationController();
-        $resp= $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $request->amount, $request->year, $request->month, $semester);
-        return response()->json($resp, 201);
-
-        return response()->json([$dados], 201);
     }
 
     public function get(Request $request){
