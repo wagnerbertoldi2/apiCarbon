@@ -60,7 +60,7 @@ class SimulationController extends Controller{
 
         $dadosSimulation= $this->getArraySimulation($functionFactor, $lat, $lon, $emissionFactorID, $regionID, $period, $valueFactor, $ano, $mes, $semestre);
 
-        DB::connection("mysqlSimulation")->table("simulation2")->insert($dadosSimulation);
+        DB::connection("mysqlSimulation")->table("simulation")->insert($dadosSimulation);
         return $dadosSimulation;
     }
 
