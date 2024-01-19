@@ -22,7 +22,7 @@ class EmissionController extends Controller{
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
-        if($dados->isNotEmpty()) {
+        if(!empty($dados)) {
             if ($dados['periodo'] == 'mensal') {
                 if (array_key_exists($request->year, $dados['anos']) === true) {
                     if (array_search($request->month, array_column($dados['anos'][$request->year], 'value')) !== false) {
