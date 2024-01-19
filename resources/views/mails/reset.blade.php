@@ -1,6 +1,10 @@
-<h1>Carbon Quantum</h1>
-<h2>Solicitação de Reset de Senha</h2>
-<hr />
-
-<p>Seu código de acesso é:</p>
-<p>{{$details['code']}}</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ $dadosEmail['titulo'] }}</title>
+</head>
+<body>
+<h1>{{ $dadosEmail['titulo'] }}</h1>
+<p>{{ $dadosEmail['conteudo'] }}</p>
+</body>
+</html>

@@ -51,9 +51,8 @@ class EmissionController extends Controller{
 
         $obj = new SimulationController();
         $resp = $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $request->amount, $request->year, $request->month, $semester);
-        return response()->json($resp, 201);
 
-        return response()->json([$dados], 201);
+        return response()->json(true, 201);
 
     }
 
