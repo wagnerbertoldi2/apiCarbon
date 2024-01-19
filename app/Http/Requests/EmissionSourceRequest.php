@@ -29,7 +29,7 @@ class EmissionSourceRequest extends FormRequest
             'Name' => 'required',
             'EmissionFactorId' => [
                 'required',
-                Rule::unique('EmissionSource')->where(function ($query) {
+                Rule::unique('emissionsource')->where(function ($query) {
                     return $query->where('PropertyId', $this->PropertyId);
                 }),
             ],
