@@ -21,11 +21,12 @@ class EmissionController extends Controller{
         }
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
-        return response()->json($dados,401);
 
         if($dados['periodo'] == 'mensal') {
-            if (array_key_exists($request->month, $dados['anos'][$request->year])) {
-                return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
+            if (array_key_exists($request->year, $dados['anos']) === true) {
+                if (array_search($request->month, array_column($dados['anos'][$request->year], 'value')) !== false) {
+                    return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
+                }
             }
         } elseif($dados['periodo'] == 'anual') {
             if (array_search($request->year, $dados['anos']) === false) {
