@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmissionFactorModel;
 use Illuminate\Http\Request;
 use App\Models\EmissionModel;
 use Illuminate\Support\Facades\DB;
@@ -51,8 +52,10 @@ class EmissionController extends Controller{
         $emission->Semester = $semester;
         $emission->save();
 
+        $EmissionFactorId= DB::table("emissionsource")->select('EmissionFactorId')->where('id', $request->EmissionSourceId)->limit(1)->get();
+
         $obj = new SimulationController();
-        $resp = $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $request->amount, $request->year, $request->month, $semester);
+        $resp = $obj->setSimulation($request->idProperty, $EmissionFactorId[0]->EmissionFactorId, $request->amount, $request->year, $request->month, $semester);
 
         return response()->json(true, 201);
 
