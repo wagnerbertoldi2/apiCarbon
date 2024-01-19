@@ -21,7 +21,7 @@ class EmissionController extends Controller{
         }
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
-//        return response()->json($dados,401);
+        return response()->json($dados,401);
 
         if($dados['periodo'] == 'mensal') {
             if (array_key_exists($request->month, $dados['anos'][$request->year])) {
