@@ -32,8 +32,7 @@ class EmissionController extends Controller{
                 return response()->json(["msg" => "Este ano já esta registrado ou não tem permissão para registra-lo."], 401);
             }
         } elseif($dados['periodo'] == 'semestral'){
-            return response()->json([(array_search($request->year, $dados['anos']) === true), $request->semester, $request->year, $dados['anos']],201);
-            if (array_search($request->year, $dados['anos']) === true) {
+            if (array_key_exists($request->year, $dados['anos']) === true) {
                 return response()->json([(array_search($request->semester, array_column($dados['anos'][$request->year], 'value'))), $request->semester, $request->year, $dados], 401);
                 if (array_search($request->semester, array_column($dados['anos'][$request->year], 'value')) !== false) {
                     return response()->json(["msg" => "Este ano e semestre já estão registrados ou não tem permissão para registra-lo."], 401);
