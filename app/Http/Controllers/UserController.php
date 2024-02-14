@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PassResetRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\codeModel;
 use App\Models\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Mockery\Generator\StringManipulation\Pass\Pass;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CodigoNumericoEmail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class UserController extends Controller{
 
     public function me(Request $request){
@@ -90,35 +95,43 @@ class UserController extends Controller{
         }
     }
 
-    public function passReset(Request $request)
-    {
-        // Validação dos dados recebidos.
-        $request->validate([
-            'email' => 'required|email',
-            'code' => 'required',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        // Busca o usuário pelo e-mail.
+    public function passReset(PassResetRequest $request){
         $user = User::where('email', $request->email)->first();
-
-        // Verifica se o usuário existe e se o código está correto.
-        if (!$user || $user->code->code !== $request->code) {
-            return response()->json([
-                'message' => 'Código ou e-mail inválido.'
-            ], 400);
+        if(!empty($user)){
+            $code= DB::table("coderesetpassword")->select("code")->where("status",2)->where("iduser",$user->id)->orderBy("id","desc")->first();
+        } else {
+            $code= "";
         }
 
-        // Atualiza a senha.
-        $user->password = Hash::make($request->newpass);
-        $user->save();
+        if (empty($user) || $code->code !== $request->code) {
+            return response()->json([
+                'message' => 'Código ou e-mail inválido.'
+            ], 401);
+        } else {
+            DB::table("users")->where("id",$user->id)->update([
+                "password" => bcrypt($request->password)
+            ]);
 
-        // Remove o código de redefinição.
-        $user->code->delete();
+            DB::table("coderesetpassword")->where("code",$code->code)->update([
+                "status" => 1
+            ]);
 
-        return response()->json([
-            'message' => 'Senha redefinida com sucesso.'
-        ]);
+            return response()->json([
+                'message' => 'Senha redefinida com sucesso!'
+            ]);
+        }
     }
 
+    public function SendEmailResetPassword(Request $request){
+        $email= $request->email;
+        $user= DB::table("users")->where("email",$email)->first();
+
+        if(empty($user->email)){
+            Mail::to($email)->send(new CodigoNumericoEmail($user));
+        } else {
+            Mail::to($user->email)->send(new CodigoNumericoEmail($user));
+        }
+
+        return true;
+    }
 }

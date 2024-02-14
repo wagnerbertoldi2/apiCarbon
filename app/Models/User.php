@@ -91,9 +91,4 @@ class User extends Authenticatable implements JWTSubject{
     public function scopeByCnpj($query, $cnpj){
         return $query->where('CNPJ', preg_replace('/[^0-9]/', '', $cnpj));
     }
-
-    public function code()
-    {
-        return $this->hasOne(CodeModel::class, 'iduser');
-    }
 }

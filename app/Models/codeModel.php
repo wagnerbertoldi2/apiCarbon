@@ -9,7 +9,7 @@ class codeModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'code';
+    protected $table = 'coderesetpassword';
     protected $fillable = ['code', 'iduser'];
-    protected $primaryKey = 'idcode';
+    protected $primaryKey = 'id';
 }

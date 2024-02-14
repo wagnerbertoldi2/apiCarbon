@@ -4,16 +4,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\RandomNumberGenerator;
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+Route::post("/sendCodeReset", [\App\Http\Controllers\UserController::class, "SendEmailResetPassword"]);
+Route::post('/passreset', [\App\Http\Controllers\UserController::class, 'passReset'])->name('reset.password');
 
 Route::prefix('user')->group(function (){
     Route::post('set', [\App\Http\Controllers\UserController::class, 'set']);
     Route::middleware('jwt.auth')->get('get', [\App\Http\Controllers\UserController::class, 'me']);
     Route::post('validate-password', [\App\Http\Controllers\UserController::class, 'verificarSenha'])->middleware('jwt.auth');
     Route::post('update', [\App\Http\Controllers\UserController::class, 'update'])->middleware('jwt.auth');
-    Route::post('code-reset', [\App\Http\Controllers\UserController::class, 'getCodeEmail'])->name('code.reset');
-    Route::post('passreset', [\App\Http\Controllers\UserController::class, 'passReset'])->name('reset.password');
 });
 
 Route::prefix('category')->middleware('jwt.auth')->group(function (){
