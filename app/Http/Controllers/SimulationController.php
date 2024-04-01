@@ -35,7 +35,7 @@ class SimulationController extends Controller{
         ];
     }
 
-    public function setSimulation($PropertyId, $emissionSourceID, $emissionFactorID, $valueFactor, $ano, $mes, $semestre){
+    public function setSimulation($PropertyId, $emissionSourceID, $emissionFactorID, $valueFactor, $ano, $mes, $semestre, $EmissionId){
         $dadosDB= DB::table('emissionsource AS E')
             ->leftJoin('emissionfactor AS F', 'F.id', '=', 'E.EmissionFactorId')
             ->leftJoin('period AS P', 'P.id', '=', 'E.PeriodId')
@@ -58,13 +58,13 @@ class SimulationController extends Controller{
         $functionFactor= $dadosDB[0]->functionFactor;
         $regionID= $dadosDB[0]->regionId;
 
-        $dadosSimulation= $this->getArraySimulation($functionFactor, $lat, $lon, $regionID, $period, $valueFactor, $ano, $mes, $semestre, $emissionFactorID);
+        $dadosSimulation= $this->getArraySimulation($functionFactor, $lat, $lon, $regionID, $period, $valueFactor, $ano, $mes, $semestre, $emissionFactorID, $EmissionId);
 
         DB::connection("mysqlSimulation")->table("simulation")->insert($dadosSimulation);
         return $dadosSimulation;
     }
 
-    public function getArraySimulation($functionFactor, $lat, $lon, $regionID, $period, $valueFactor, $ano, $mes, $semestre, $emissionFactorID){
+    public function getArraySimulation($functionFactor, $lat, $lon, $regionID, $period, $valueFactor, $ano, $mes, $semestre, $emissionFactorID, $emissionId){
         $factorCalculado= $this->$functionFactor($valueFactor);
         $calcDario= $this->calcDiario($factorCalculado, $period, $ano, $mes, $semestre);
 
@@ -84,7 +84,8 @@ class SimulationController extends Controller{
                 'lat' => $lat,
                 'lon' => $lon,
                 'emissionFactorID' => $emissionFactorID,
-                'regionID' => $regionID
+                'regionID' => $regionID,
+                'EmissionId' => $emissionId
             ];
 
             $data->modify('+1 day');

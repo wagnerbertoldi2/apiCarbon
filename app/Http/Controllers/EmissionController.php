@@ -7,18 +7,52 @@ use Illuminate\Http\Request;
 use App\Models\EmissionModel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\SimulationController;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+
 class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
 
         if(!empty($file)) {
-            $path = $file->store('public/attachments');
+            $originalExtension = $file->getClientOriginalExtension();
+            $tempPath = $file->getRealPath();
+
+            if (!file_exists($tempPath)) {
+                throw new \Exception('Arquivo não encontrado: ' . $tempPath);
+            }
+
+            $tempPath = $file->getRealPath();
+            $nameFile= basename($tempPath) . '.' . $file->getClientOriginalExtension();
+
+            if ($originalExtension == 'pdf') {
+                $path = $request->file('attachment')->store('attachments');
+            } else {
+                if (file_exists($tempPath)) {
+                    $img = Image::make($tempPath)->resize(1000, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                } else {
+                    throw new \Exception('Arquivo de imagem não encontrado: ' . $tempPath);
+                }
+
+                $quality = 90;
+                do {
+                    $img->encode('jpg', $quality);
+                    $quality -= 5;
+                } while ($img->filesize() > 350 * 1024 && $quality > 0);
+
+                $nameFile= basename($tempPath) . '.' . $file->getClientOriginalExtension();
+                $path = $request->file('attachment')->storeAs('attachments', $nameFile , 'local');
+                Storage::put($path, (string) $img);
+            }
         }
 
         $emission = new EmissionModel();
 
         if(!empty($file)) {
-            $emission->Attachment = basename($path);
+            $emission->Attachment = $nameFile;
         }
 
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
@@ -52,10 +86,12 @@ class EmissionController extends Controller{
         $emission->Semester = $semester;
         $emission->save();
 
+        $EmissionId = $emission->id;
+
         $EmissionFactorId= DB::table("emissionsource")->select('EmissionFactorId')->where('id', $request->EmissionSourceId)->limit(1)->get();
 
         $obj = new SimulationController();
-        $resp = $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $EmissionFactorId[0]->EmissionFactorId, $request->amount, $request->year, $request->month, $semester);
+        $resp = $obj->setSimulation($request->idProperty, $request->EmissionSourceId, $EmissionFactorId[0]->EmissionFactorId, $request->amount, $request->year, $request->month, $semester, $EmissionId);
 
         return response()->json(true, 201);
 
@@ -220,5 +256,16 @@ class EmissionController extends Controller{
 
         $emission->save();
         return response()->json($emission, 200);
+    }
+
+    public function deleteFonteEmissao(Request $request){
+        $emission = EmissionModel::find($request->id);
+        //dd($emission->created_at, $emission->created_at->diffInMinutes(), $emission->created_at->diffInMinutes() < 15);
+        if($emission->created_at->diffInMinutes() > 15){
+            return response()->json(["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."], 201);
+        } else {
+            $emission->delete();
+            return response()->json(true, 200);
+        }
     }
 }

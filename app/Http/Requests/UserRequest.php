@@ -24,7 +24,7 @@ class UserRequest extends FormRequest{
         $rules= [
             'firstName' => ['required','string', 'max:50'],
             'lastName' => ['required', 'string', 'max:50'],
-            'cpf' => ['required', 'string', 'max:11', 'unique:users'],
+            'cpf' => ['required', 'string', 'max:15', 'unique:users'],
             'rg' => ['required', 'string', 'max:30', 'unique:users'],
             'cnpj' => ['nullable', 'string', 'max:30', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:50', 'unique:users'],

@@ -9,10 +9,12 @@ use App\Models\EmissionSourceModel;
 class EmissionSourceController extends Controller{
     public function set(EmissionSourceRequest $request){
         $emissionSource = new EmissionSourceModel();
+        $periodId= EmissionSourceModel::find($request->EmissionFactorId)->PeriodId;
+
         $emissionSource->Name = $request->Name;
         $emissionSource->EmissionFactorId = $request->EmissionFactorId;
         $emissionSource->PropertyId = $request->PropertyId;
-        $emissionSource->PeriodId = $request->PeriodId;
+        $emissionSource->PeriodId = $periodId;
         $emissionSource->save();
 
         return response()->json($emissionSource, 201);

@@ -59,4 +59,12 @@ Route::prefix('emission')->middleware('jwt.auth')->group(function (){
     Route::get('get', [\App\Http\Controllers\EmissionController::class, 'get']);
     Route::get('getList', [\App\Http\Controllers\EmissionController::class, 'getList']);
     Route::post('update', [\App\Http\Controllers\EmissionController::class, 'update']);
+    Route::get('delete', [\App\Http\Controllers\EmissionController::class, 'deleteFonteEmissao']);
 });
+
+Route::prefix('import')->middleware('jwt.auth')->group(function () {
+    Route::post('set', [\App\Http\Controllers\ImportController::class, 'importXlsx']);
+});
+
+Route::post('vincula', [\App\Http\Controllers\ImportController::class, 'openLink']);
+Route::post('vincula-dados', [\App\Http\Controllers\ImportController::class, 'dadosUnidade']);
