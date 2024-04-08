@@ -29,10 +29,10 @@ class CoordenadasController extends Controller{
         $resposta = file_get_contents($url);
         $dados = json_decode($resposta, true);
 
-        $this->logradouro= $dados['logradouro'];
-        $this->bairro= $dados['bairro'];
-        $this->localidade= $dados['localidade'];
-        $this->uf= $dados['uf'];
+        $this->logradouro= $dados['logradouro'] ?? null;
+        $this->bairro= $dados['bairro'] ?? null;
+        $this->localidade= $dados['localidade'] ?? null;
+        $this->uf= $dados['uf'] ?? null;
     }
 
     public function obterCoordenadasNominatim() {

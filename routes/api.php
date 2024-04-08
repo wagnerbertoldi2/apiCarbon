@@ -55,7 +55,7 @@ Route::prefix('period')->middleware('jwt.auth')->group(function (){
 });
 
 Route::prefix('emission')->middleware('jwt.auth')->group(function (){
-    Route::post('set', [\App\Http\Controllers\EmissionController::class, 'set']);
+    Route::post('set', [\App\Http\Controllers\EmissionController::class, 'sephpt']);
     Route::get('get', [\App\Http\Controllers\EmissionController::class, 'get']);
     Route::get('getList', [\App\Http\Controllers\EmissionController::class, 'getList']);
     Route::post('update', [\App\Http\Controllers\EmissionController::class, 'update']);
