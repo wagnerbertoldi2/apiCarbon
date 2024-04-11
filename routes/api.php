@@ -68,5 +68,5 @@ Route::prefix('import')->middleware('jwt.auth')->group(function () {
 
 Route::post('vincula', [\App\Http\Controllers\ImportController::class, 'openLink']);
 Route::post('vincula-dados', [\App\Http\Controllers\ImportController::class, 'dadosUnidade']);
-Route::get('get-dados', [\App\Http\Controllers\ImportController::class, 'listDadosImportados']);
+Route::post('get-dados', [\App\Http\Controllers\ImportController::class, 'listDadosImportados']);
 Route::get('get-dados-importes', [\App\Http\Controllers\ImportController::class, 'listaImportes']);
