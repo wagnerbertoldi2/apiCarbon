@@ -194,4 +194,25 @@ class ImportController extends Controller{
             return false;
         }
     }
+
+    public function listaImportes(Request $request){
+        $importes= DB::table("importe")->get();
+
+        if($importes){
+            return response()->json($importes, 200);
+        } else {
+            return response()->json(['error' => 'Nenhum importe encontrado'], 404);
+        }
+    }
+
+    public function listDadosImportados(Request $request){
+        $dados= "SELECT * FROM importe_dados WHERE importeId=$request->id";
+        $dados= DB::select($dados);
+
+        if($dados){
+            return response()->json($dados, 200);
+        } else {
+            return response()->json(['error' => 'Nenhum dado encontrado'], 404);
+        }
+    }
 }
