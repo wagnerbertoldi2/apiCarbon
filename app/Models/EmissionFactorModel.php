@@ -15,7 +15,8 @@ class EmissionFactorModel extends Model{
         'Name',
         'UnitId',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'text'
     ];
 
     protected $primaryKey='id';

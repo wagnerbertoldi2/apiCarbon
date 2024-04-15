@@ -10,7 +10,7 @@ class EmissionFactorController extends Controller{
     public function get(Request $request){
         if($request->has('id')){
             $emissionFactor = EmissionFactorModel::where('id', $request->id)->get();
-            return response()->json($emissionFactor);
+            return response()->json($emissionFactor, 201);
         } elseif($request->has('idproperty')) {
             $idproperty = $request->idproperty;
 
@@ -23,7 +23,7 @@ class EmissionFactorController extends Controller{
                 ->get();
         } else {
             $emissionFactor = EmissionFactorModel::all();
-            return response()->json($emissionFactor);
+            return response()->json($emissionFactor, 201);
         }
     }
 
