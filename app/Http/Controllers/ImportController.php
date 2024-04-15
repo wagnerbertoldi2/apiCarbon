@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Maatwebsite\Excel\Concerns\FromArray;
 
 class ImportController extends Controller{
     private $key;
@@ -19,7 +20,13 @@ class ImportController extends Controller{
     }
 
     public function importXlsx(Request $request){
-        $dadosXlsx= $this->getXlsx($request);
+        $headerPadrao= ["bairro", "cep", "cidade", "cnpj", "contato", "cpf", "códigopostal", "celular", "complemento", "datanascimento", "e-mail", "endereço", "estadocivil", "estado", "escolaridade", "gênero", "identidade", "nomedamãe", "nome", "observação", "país", "sexo", "telefone", "títulodeeleitor", "inscriçãomunicipal", "tipopessoa"];
+        $dadosXlsx= $this->getXlsx($request, $headerPadrao);
+
+        if(isset($dadosXlsx['nerror'])){
+            return response()->json(['error' => 'Arquivo inválido'], 401);
+        }
+
         $fileName = $request->file->getClientOriginalName();
 
         $importId= DB::table("importe")->insertGetId(["filename" => $fileName]);
@@ -28,18 +35,22 @@ class ImportController extends Controller{
         $i=0;
         $j=0;
         foreach($db as $linha){
-            if($idItem= DB::table("importe_dados")->insertGetId($linha)){
-                $link= $this->geraLink($linha, $importId, $idItem);
-                DB::table("importe_dados")->where("id", $idItem)->update(["link" => $link]);
-                $i++;
-            } else {
-                $j++;
+            $insMun= DB::table('importe_dados')->where('inscricaomunicipal', $linha['inscricaomunicipal'])->first();
+
+            if($insMun == null && $linha['inscricaomunicipal'] != null){
+                if($idItem= DB::table("importe_dados")->insertGetId($linha)){
+                    $link= $this->geraLink($linha, $importId, $idItem);
+                    DB::table("importe_dados")->where("id", $idItem)->update(["link" => $link]);
+                    $i++;
+                } else {
+                    $j++;
+                }
             }
         }
 
         DB::table("importe")->where("id", $importId)->update(["total" => count($db), "success" => $i, "error" => $j]);
 
-        return response()->json(["success" => $i, "error" => $j]);
+        return response()->json(["success" => $i, "error" => $j], 201);
     }
 
     private function organizaXlsx($dadosXlsx, $importId){
@@ -78,6 +89,8 @@ class ImportController extends Controller{
             $db[$i]["sexo"]= $dado["sexo"];
             $db[$i]["telefone"]= $dado["telefone"];
             $db[$i]["tituloeleitor"]= $dado["títulodeeleitor"];
+            $db[$i]["inscricaomunicipal"]= $dado["inscriçãomunicipal"];
+            $db[$i]["tipopessoa"]= $dado["tipopessoa"];
             $i++;
         }
 
@@ -166,7 +179,7 @@ class ImportController extends Controller{
         $LinkCriptografado= base64_encode(md5($tudo)."^".base64_encode(openssl_encrypt("^id=".$idItem, 'AES-128-ECB',$this->key)));
         return $LinkCriptografado;
     }
-    private function getXlsx($request){
+    private function getXlsx($request, $headerPadrao){
         if ($request->hasFile('file')) {
             $file = $request->file('file');
 
@@ -180,6 +193,12 @@ class ImportController extends Controller{
 
             foreach ($header as $key => $value) {
                 $header[$key]= str_replace(" ","",strtolower(str_replace(")","", explode("(", $value)[0])));
+            }
+
+            foreach ($headerPadrao as $key => $value) {
+                if(!in_array($value, $header)){
+                    return ['error' => 'Arquivo inválido', 'nerror'=> 1];
+                }
             }
 
             unset($data[0][0]);
@@ -214,5 +233,48 @@ class ImportController extends Controller{
         } else {
             return response()->json(['error' => 'Nenhum dado encontrado'], 404);
         }
+    }
+
+    public function getDadosLinhaImporte(Request $request){
+        $dados= DB::table("importe_dados")->where("id", $request->id)->first();
+        return response()->json($dados, 201);
+    }
+
+    public function exportXlsx($id, $token){
+        try {
+            $user = JWTAuth::setToken($token)->authenticate();
+            if ($user == false) {
+                return response()->json(['error' => 'Token inválido'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token inválido'], 401);
+        }
+
+        $dados= DB::table("importe_dados")->where("importeId", $id)->get();
+        $dados= json_decode(json_encode($dados), true);
+
+        $header= ["bairro", "cep", "cidade", "cnpj", "contato", "cpf", "codigopostal", "celular", "complemento", "datanascimento", "email", "endereco", "estadocivil", "estado", "escolaridade", "genero", "identidade", "nomedamae", "nome", "observacao", "pais", "sexo", "telefone", "tituloeleitor"];
+        $dadosXlsx= [];
+        $dadosXlsx[]= $header;
+
+        foreach ($dados as $key => $dado) {
+            $linha= [];
+            foreach ($header as $key => $value) {
+                $linha[]= $dado[$value];
+            }
+            $dadosXlsx[]= $linha;
+        }
+
+        return Excel::download(new class($dadosXlsx) implements FromArray {
+            private $dados;
+
+            public function __construct($dados) {
+                $this->dados = $dados;
+            }
+
+            public function array(): array {
+                return $this->dados;
+            }
+        }, 'Importe.xlsx');
     }
 }

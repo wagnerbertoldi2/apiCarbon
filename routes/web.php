@@ -24,3 +24,4 @@ Auth::routes([
 ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/exporte-dados/{id}/{token}', [\App\Http\Controllers\ImportController::class, 'exportXlsx']);

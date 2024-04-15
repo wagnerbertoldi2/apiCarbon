@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\CodigoNumericoEmail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\cpfController;
 
 class UserController extends Controller{
 
@@ -63,6 +64,11 @@ class UserController extends Controller{
         $user->RG = $request['rg'];
         $user->CNPJ = $request['cnpj'];
         $user->email = $request['email'];
+
+        $objCpf = new cpfController();
+        if(!$objCpf->validarCPF($request['cpf'])){
+            return response()->json(['msg'=>'CPF inválido'], 401);
+        }
 
         if($request['password'] != '' || !empty($request['password'])) {
             $user->password = bcrypt($request['password']);
@@ -133,5 +139,10 @@ class UserController extends Controller{
         }
 
         return true;
+    }
+
+    public function getProfile(Request $request){
+        $user = User::find($request->id);
+        return response()->json($user, 201);
     }
 }

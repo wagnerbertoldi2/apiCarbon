@@ -15,6 +15,7 @@ Route::prefix('user')->group(function (){
     Route::middleware('jwt.auth')->get('get', [\App\Http\Controllers\UserController::class, 'me']);
     Route::post('validate-password', [\App\Http\Controllers\UserController::class, 'verificarSenha'])->middleware('jwt.auth');
     Route::post('update', [\App\Http\Controllers\UserController::class, 'update'])->middleware('jwt.auth');
+    Route::post('get-profile', [\App\Http\Controllers\UserController::class, 'getProfile'])->middleware('jwt.auth');
 });
 
 Route::prefix('category')->middleware('jwt.auth')->group(function (){
@@ -68,5 +69,6 @@ Route::prefix('import')->middleware('jwt.auth')->group(function () {
 
 Route::post('vincula', [\App\Http\Controllers\ImportController::class, 'openLink']);
 Route::post('vincula-dados', [\App\Http\Controllers\ImportController::class, 'dadosUnidade']);
-Route::post('get-dados', [\App\Http\Controllers\ImportController::class, 'listDadosImportados']);
-Route::get('get-dados-importes', [\App\Http\Controllers\ImportController::class, 'listaImportes']);
+Route::get('get-dados', [\App\Http\Controllers\ImportController::class, 'listDadosImportados'])->middleware('auth.admin');
+Route::get('get-dados-importes', [\App\Http\Controllers\ImportController::class, 'listaImportes'])->middleware('auth.admin');
+Route::get('get-dados-linha', [\App\Http\Controllers\ImportController::class, 'getDadosLinhaImporte'])->middleware('auth.admin');
