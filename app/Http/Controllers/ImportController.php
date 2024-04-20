@@ -20,7 +20,7 @@ class ImportController extends Controller{
     }
 
     public function importXlsx(Request $request){
-        $headerPadrao= ["bairro", "cep", "cidade", "cnpj", "contato", "cpf", "códigopostal", "celular", "complemento", "datanascimento", "e-mail", "endereço", "estadocivil", "estado", "escolaridade", "gênero", "identidade", "nomedamãe", "nome", "observação", "país", "sexo", "telefone", "títulodeeleitor", "inscriçãomunicipal", "tipopessoa"];
+        $headerPadrao= ["matricula", "logradouro", "numero", "complemento", "bairro", "cep", "tipo_unidade", "link"];
         $dadosXlsx= $this->getXlsx($request, $headerPadrao);
 
         if(isset($dadosXlsx['nerror'])){
@@ -35,9 +35,9 @@ class ImportController extends Controller{
         $i=0;
         $j=0;
         foreach($db as $linha){
-            $insMun= DB::table('importe_dados')->where('inscricaomunicipal', $linha['inscricaomunicipal'])->first();
+            $insMun= DB::table('importe_dados')->where('matricula', $linha['matricula'])->first();
 
-            if($insMun == null && $linha['inscricaomunicipal'] != null){
+            if($insMun == null && $linha['matricula'] != null){
                 if($idItem= DB::table("importe_dados")->insertGetId($linha)){
                     $link= $this->geraLink($linha, $importId, $idItem);
                     DB::table("importe_dados")->where("id", $idItem)->update(["link" => $link]);
@@ -58,39 +58,13 @@ class ImportController extends Controller{
         $i=0;
         foreach ($dadosXlsx as $key => $dado) {
             $db[$i]["importeId"]= $importId;
+            $db[$i]["matricula"]= $dado["matricula"];
+            $db[$i]["logradouro"]= $dado["logradouro"];
+            $db[$i]["numero"]= $dado["numero"];
+            $db[$i]["complemento"]= $dado["complemento"];
             $db[$i]["bairro"]= $dado["bairro"];
             $db[$i]["cep"]= $dado["cep"];
-            $db[$i]["cidade"]= $dado["cidade"];
-            $db[$i]["cnpj"]= $dado["cnpj"];
-            $db[$i]["contato"]= $dado["contato"];
-            $db[$i]["cpf"]= $dado["cpf"];
-            $db[$i]["codigopostal"]= $dado["códigopostal"];
-            $db[$i]["celular"]= $dado["celular"];
-            $db[$i]["complemento"]= $dado["complemento"];
-
-            if(!empty($dataNascimento)) {
-                $dataNascimento = explode("/", $dado["datanascimento"]);
-                $db[$i]["datanascimento"] = $dataNascimento[2] . "-" . $dataNascimento[1] . "-" . $dataNascimento[0];
-            } else {
-                $db[$i]["datanascimento"] = null;
-            }
-
-            $db[$i]["email"]= $dado["e-mail"];
-            $db[$i]["endereco"]= $dado["endereço"];
-            $db[$i]["estadocivil"]= $dado["estadocivil"];
-            $db[$i]["estado"]= $dado["estado"];
-            $db[$i]["escolaridade"]= $dado["escolaridade"];
-            $db[$i]["genero"]= $dado["gênero"];
-            $db[$i]["identidade"]= $dado["identidade"];
-            $db[$i]["nomedamae"]= $dado["nomedamãe"];
-            $db[$i]["nome"]= $dado["nome"];
-            $db[$i]["observacao"]= $dado["observação"];
-            $db[$i]["pais"]= $dado["país"];
-            $db[$i]["sexo"]= $dado["sexo"];
-            $db[$i]["telefone"]= $dado["telefone"];
-            $db[$i]["tituloeleitor"]= $dado["títulodeeleitor"];
-            $db[$i]["inscricaomunicipal"]= $dado["inscriçãomunicipal"];
-            $db[$i]["tipopessoa"]= $dado["tipopessoa"];
+            $db[$i]["tipo_unidade"]= $dado["tipo_unidade"];
             $i++;
         }
 
@@ -253,7 +227,7 @@ class ImportController extends Controller{
         $dados= DB::table("importe_dados")->where("importeId", $id)->get();
         $dados= json_decode(json_encode($dados), true);
 
-        $header= ["bairro", "cep", "cidade", "cnpj", "contato", "cpf", "codigopostal", "celular", "complemento", "datanascimento", "email", "endereco", "estadocivil", "estado", "escolaridade", "genero", "identidade", "nomedamae", "nome", "observacao", "pais", "sexo", "telefone", "tituloeleitor"];
+        $header= ["matricula", "logradouro", "numero", "complemento", "bairro", "cep", "tipo_unidade", "link"];
         $dadosXlsx= [];
         $dadosXlsx[]= $header;
 
