@@ -79,6 +79,8 @@ class EmissionController extends Controller{
 
         $semester = empty($request->semester) ? (($request->month * 1) <= 6 ? 1 : 2) : $request->semester;
 
+        dd($dados);
+
         $emission->Amount = $request->amount;
         $emission->EmissionSourceId = $request->EmissionSourceId;
         $emission->Month = $request->month;

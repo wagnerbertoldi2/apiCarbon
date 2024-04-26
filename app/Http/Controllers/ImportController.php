@@ -20,7 +20,7 @@ class ImportController extends Controller{
     }
 
     public function importXlsx(Request $request){
-        $headerPadrao= ["matricula", "logradouro", "numero", "complemento", "bairro", "cep", "tipo_unidade", "link"];
+        $headerPadrao= ["matricula", "logradouro", "numero", "complemento", "bairro", "cep", "tipo_unidade"];
         $dadosXlsx= $this->getXlsx($request, $headerPadrao);
 
         if(isset($dadosXlsx['nerror'])){
