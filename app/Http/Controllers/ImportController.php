@@ -169,6 +169,8 @@ class ImportController extends Controller{
                 $header[$key]= str_replace(" ","",strtolower(str_replace(")","", explode("(", $value)[0])));
             }
 
+            return response()->json($header, 200);
+
             foreach ($headerPadrao as $key => $value) {
                 if(!in_array($value, $header)){
                     return ['error' => 'Arquivo inválido', 'nerror'=> 1];
