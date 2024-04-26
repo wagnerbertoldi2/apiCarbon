@@ -58,13 +58,13 @@ class ImportController extends Controller{
         $i=0;
         foreach ($dadosXlsx as $key => $dado) {
             $db[$i]["importeId"]= $importId;
-            $db[$i]["matricula"]= $dado["matricula"];
+            $db[$i]["matricula"]= $dado["matrícula"];
             $db[$i]["logradouro"]= $dado["logradouro"];
-            $db[$i]["numero"]= $dado["numero"];
+            $db[$i]["numero"]= $dado["número"];
             $db[$i]["complemento"]= $dado["complemento"];
             $db[$i]["bairro"]= $dado["bairro"];
             $db[$i]["cep"]= $dado["cep"];
-            $db[$i]["tipo_unidade"]= $dado["tipo_unidade"];
+            $db[$i]["tipo_unidade"]= $dado["tipounidade"];
             $i++;
         }
 
