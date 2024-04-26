@@ -20,10 +20,8 @@ class ImportController extends Controller{
     }
 
     public function importXlsx(Request $request){
-        $headerPadrao= ["matricula", "logradouro", "numero", "complemento", "bairro", "cep", "tipo_unidade"];
+        $headerPadrao= ["matrícula", "logradouro", "número", "complemento", "bairro", "cep", "tipounidade"];
         $dadosXlsx= $this->getXlsx($request, $headerPadrao);
-
-        return response()->json($dadosXlsx, 201);
 
         if(isset($dadosXlsx['nerror'])){
             return response()->json(['error' => 'Arquivo inválido'], 401);
@@ -170,8 +168,6 @@ class ImportController extends Controller{
             foreach ($header as $key => $value) {
                 $header[$key]= str_replace(" ","",strtolower(str_replace(")","", explode("(", $value)[0])));
             }
-
-            return $header;
 
             foreach ($headerPadrao as $key => $value) {
                 if(!in_array($value, $header)){
