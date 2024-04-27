@@ -17,8 +17,7 @@ class CreateParametersTable extends Migration
             $table->id();
             $table->mediumText('parameter');
             $table->text('value');
-            $table->timestamps('created_at');
-            $table->timestamps('updated_at');
+            $table->timestamps();
         });
     }
 

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\RandomNumberGenerator;
+use App\Http\Controllers\ParameterController;
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post("/sendCodeReset", [\App\Http\Controllers\UserController::class, "SendEmailResetPassword"]);
@@ -74,3 +75,5 @@ Route::get('get-dados-importes', [\App\Http\Controllers\ImportController::class,
 Route::get('get-dados-linha', [\App\Http\Controllers\ImportController::class, 'getDadosLinhaImporte'])->middleware('auth.admin');
 
 Route::post('testList', [\App\Http\Controllers\EmissionController::class, 'getList']);
+
+Route::get('parameters/{id}', [\App\Http\Controllers\ParameterController::class, 'getParameter']);
