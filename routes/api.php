@@ -72,3 +72,5 @@ Route::post('vincula-dados', [\App\Http\Controllers\ImportController::class, 'da
 Route::get('get-dados', [\App\Http\Controllers\ImportController::class, 'listDadosImportados'])->middleware('auth.admin');
 Route::get('get-dados-importes', [\App\Http\Controllers\ImportController::class, 'listaImportes'])->middleware('auth.admin');
 Route::get('get-dados-linha', [\App\Http\Controllers\ImportController::class, 'getDadosLinhaImporte'])->middleware('auth.admin');
+
+Route::post('testList', [\App\Http\Controllers\EmissionController::class, 'getList']);

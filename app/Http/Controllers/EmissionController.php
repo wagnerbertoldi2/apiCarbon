@@ -58,7 +58,13 @@ class EmissionController extends Controller{
         $dados= $this->getList2($request->idProperty, $request->EmissionSourceId, 'array');
 
         if(!empty($dados)) {
-            if ($dados['periodo'] == 'mensal') {
+            if ($dados['periodo'] == 'semanal') {
+                if (array_key_exists($request->year, $dados['anos']) === true) {
+                    if (array_search($request->week, array_column($dados['anos'][$request->year], 'week')) !== false) {
+                        return response()->json(["msg" => "Esta semana e ano já estão registrados ou não tem permissão para registra-los."], 401);
+                    }
+                }
+            } elseif ($dados['periodo'] == 'mensal') {
                 if (array_key_exists($request->year, $dados['anos']) === true) {
                     if (array_search($request->month, array_column($dados['anos'][$request->year], 'value')) !== false) {
                         return response()->json(["msg" => "Este mês e ano já estão registrados ou não tem permissão para registra-los."], 401);
@@ -78,8 +84,6 @@ class EmissionController extends Controller{
         }
 
         $semester = empty($request->semester) ? (($request->month * 1) <= 6 ? 1 : 2) : $request->semester;
-
-        dd($dados);
 
         $emission->Amount = $request->amount;
         $emission->EmissionSourceId = $request->EmissionSourceId;
@@ -150,7 +154,7 @@ class EmissionController extends Controller{
         $periodo= "";
 
         $result = DB::table('emission as E')
-            ->select('E.Year', 'E.Month', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
+            ->select('E.Year', 'E.Month', 'E.week', 'E.Semester', DB::raw('(SELECT name FROM period WHERE id=S.PeriodId LIMIT 1) as period'))
             ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
             ->where('S.PropertyId', '=', $idProperty)
             ->where('S.id', '=', $idEmissionSource)
@@ -162,7 +166,16 @@ class EmissionController extends Controller{
             $res = collect($result);
             $periodo = strtolower($res->first()->period);
 
-            if ($periodo == "mensal") {
+            if($periodo == "semanal"){
+                foreach ($years as $y) {
+                    $allWeeks = range(1, 53);
+                    $usedWeeks = $res->where('Year', $y)->pluck('week')->unique()->all();
+                    $missingWeeks = array_diff($allWeeks, $usedWeeks);
+                    foreach ($missingWeeks as $w) {
+                        $results[$y][$w] = ["year" => $y, "week" => $w];
+                    }
+                }
+            } elseif ($periodo == "mensal") {
                 foreach ($years as $y) {
                     $filteredResult[$y] = $res->filter(function ($item) use ($y) {
                         return $item->Year == $y;
