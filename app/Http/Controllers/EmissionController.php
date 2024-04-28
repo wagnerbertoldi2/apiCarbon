@@ -19,7 +19,7 @@ class EmissionController extends Controller{
             $tempPath = $file->getRealPath();
 
             if (!file_exists($tempPath)) {
-                throw new \Exception('Arquivo não encontrado: ' . $tempPath);
+                return response()->json(["msg" => 'Arquivo não encontrado: ' . $tempPath], 401);
             }
 
             $tempPath = $file->getRealPath();
@@ -34,7 +34,7 @@ class EmissionController extends Controller{
                         $constraint->upsize();
                     });
                 } else {
-                    throw new \Exception('Arquivo de imagem não encontrado: ' . $tempPath);
+                    return response()->json(["msg" => 'Arquivo não encontrado: ' . $tempPath], 401);
                 }
 
                 $quality = 90;
