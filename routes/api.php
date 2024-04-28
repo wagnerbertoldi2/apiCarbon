@@ -76,4 +76,4 @@ Route::get('get-dados-linha', [\App\Http\Controllers\ImportController::class, 'g
 
 Route::post('testList', [\App\Http\Controllers\EmissionController::class, 'getList']);
 
-Route::get('parameters/{id}', [\App\Http\Controllers\ParameterController::class, 'getParameter']);
+Route::get('parameters/{parameter}', [\App\Http\Controllers\ParameterController::class, 'getParameter']);
