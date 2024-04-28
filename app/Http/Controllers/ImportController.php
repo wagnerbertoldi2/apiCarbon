@@ -237,8 +237,9 @@ class ImportController extends Controller{
             foreach ($header as $key => $value) {
                 if ($value == 'link') {
                     $linha[] = $domain . '/vincula?key=' . $dado[$value];
+                } else {
+                    $linha[]= $dado[$value];
                 }
-                $linha[]= $dado[$value];
             }
             $dadosXlsx[]= $linha;
         }
