@@ -95,7 +95,11 @@ class SimulationController extends Controller{
     }
 
     public function calcDiario($factorCalculado, $periodo, $ano, $mes="0", $semestre="0"){
-        if($periodo == "mensal"){
+
+        if($periodo == "semanal"){
+            $factorDiario= $factorCalculado / 7;
+            $dias= 7;
+        } elseif($periodo == "mensal"){
             $dias= cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
             $factorDiario= $factorCalculado / $dias;
         } elseif($periodo == "semestral"){

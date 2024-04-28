@@ -60,7 +60,7 @@ class EmissionController extends Controller{
         if(!empty($dados)) {
             if ($dados['periodo'] == 'semanal') {
                 if (array_key_exists($request->year, $dados['anos']) === true) {
-                    if (array_search($request->week, array_column($dados['anos'][$request->year], 'week')) !== false) {
+                    if (array_search($request->week, array_column($dados['anos'][$request->year], 'week')) == false) {
                         return response()->json(["msg" => "Esta semana e ano já estão registrados ou não tem permissão para registra-los."], 401);
                     }
                 }
@@ -89,6 +89,7 @@ class EmissionController extends Controller{
         $emission->EmissionSourceId = $request->EmissionSourceId;
         $emission->Month = $request->month;
         $emission->Year = $request->year;
+        $emission->week = $request->week;
         $emission->Semester = $semester;
         $emission->save();
 
