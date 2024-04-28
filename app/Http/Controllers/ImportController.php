@@ -48,7 +48,7 @@ class ImportController extends Controller{
             }
         }
 
-        DB::table("importe")->where("id", $importId)->update(["total" => count($db), "success" => $i, "error" => $j]);
+        DB::table("importe")->where("id", $importId)->update(["total" => count($db)-1, "success" => $i, "error" => $j]);
 
         return response()->json(["success" => $i, "error" => $j], 201);
     }
@@ -214,7 +214,7 @@ class ImportController extends Controller{
         return response()->json($dados, 201);
     }
 
-    public function exportXlsx($id, $token){
+    public function exportXlsx($id, $token, Request $request){
         try {
             $user = JWTAuth::setToken($token)->authenticate();
             if ($user == false) {
@@ -226,6 +226,7 @@ class ImportController extends Controller{
 
         $dados= DB::table("importe_dados")->where("importeId", $id)->get();
         $dados= json_decode(json_encode($dados), true);
+        $domain = $request->query('domain');
 
         $header= ["matricula", "logradouro", "numero", "complemento", "bairro", "cep", "tipo_unidade", "link"];
         $dadosXlsx= [];
@@ -234,7 +235,11 @@ class ImportController extends Controller{
         foreach ($dados as $key => $dado) {
             $linha= [];
             foreach ($header as $key => $value) {
-                $linha[]= $dado[$value];
+                if ($value == 'link') {
+                    $linha[] = $domain . '/vincula?key=' . $dado[$value];
+                } else {
+                    $linha[]= $dado[$value];
+                }
             }
             $dadosXlsx[]= $linha;
         }
