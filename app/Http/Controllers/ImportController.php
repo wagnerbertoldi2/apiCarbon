@@ -48,7 +48,7 @@ class ImportController extends Controller{
             }
         }
 
-        DB::table("importe")->where("id", $importId)->update(["total" => count($db), "success" => $i, "error" => $j]);
+        DB::table("importe")->where("id", $importId)->update(["total" => count($db)-1, "success" => $i, "error" => $j]);
 
         return response()->json(["success" => $i, "error" => $j], 201);
     }
