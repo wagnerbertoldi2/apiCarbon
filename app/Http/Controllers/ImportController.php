@@ -101,9 +101,9 @@ class ImportController extends Controller{
                         $obj = new CoordenadasController();
                         $obj->setCep($dado->cep);
                         $obj->setNum(1);
-                        try {
+                        try { 
                             $res = $obj->obterCoordenadasNominatim();
-                        } catch (Exception $e) {
+                        } catch (\RuntimeException $e) {
                             $res = ["latitude" => null, "longitude" => null, "request" => null, "response" => null];
                         }
                     } else {
