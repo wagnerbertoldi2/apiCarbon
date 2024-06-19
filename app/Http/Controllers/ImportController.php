@@ -107,14 +107,14 @@ class ImportController extends Controller{
                     }
 
                     $property = new PropertyModel();
-                    $property->Name = $dado->endereco;
-                    $property->Registration = "";
+                    $property->Name = $dado->logradouro;
+                    $property->Registration = $dado->matricula;
                     $property->CEP = $dado->cep;
                     $property->City = $dado->cidade;
-                    $property->Number = 0;
+                    $property->Number = $dado->numero;
                     $property->Complement = $dado->complemento;
                     $property->NumberOfPeoples = 0;
-                    $property->Address = $dado->endereco;
+                    $property->Address = $dado->logradouro;
                     $property->UF = $dado->estado;
                     $property->UserId = $user->id;
                     $property->CategoryId = empty($dado->cnpj) ? 1 : 2;
