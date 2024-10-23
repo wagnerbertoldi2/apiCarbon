@@ -110,6 +110,7 @@ class ImportController extends Controller{
                         $res = ["latitude" => null, "longitude" => null, "request" => null, "response" => null];
                     }
 
+                    dd($dado);
                     $property = new PropertyModel();
                     $property->Name = $dado->logradouro;
                     $property->Registration = $dado->matricula;
