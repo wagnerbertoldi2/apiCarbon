@@ -95,7 +95,8 @@ class ImportController extends Controller{
                 $decryptedData = openssl_decrypt(base64_decode(explode("^", $LinkCriptografado)[1]), 'AES-128-ECB', $this->key);
                 $ImportId = explode("^id=", $decryptedData)[1];
                 $dado= DB::table("importe_dados")->where("id", $ImportId)->first();
-                return response()->json($dado, 201);
+                dd($dado->status, ($dado->status == 0), $dado->cep, !empty($dado->cep));
+
                 if($dado->status == 0) {
                     if (!empty($dado->cep)) {
                         $obj = new CoordenadasController();
