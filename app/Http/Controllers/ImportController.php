@@ -95,13 +95,13 @@ class ImportController extends Controller{
                 $decryptedData = openssl_decrypt(base64_decode(explode("^", $LinkCriptografado)[1]), 'AES-128-ECB', $this->key);
                 $ImportId = explode("^id=", $decryptedData)[1];
                 $dado= DB::table("importe_dados")->where("id", $ImportId)->first();
-
+                return response()->json($dado, 201);
                 if($dado->status == 0) {
                     if (!empty($dado->cep)) {
                         $obj = new CoordenadasController();
                         $obj->setCep($dado->cep);
                         $obj->setNum(1);
-                        try { 
+                        try {
                             $res = $obj->obterCoordenadasNominatim();
                         } catch (\RuntimeException $e) {
                             $res = ["latitude" => null, "longitude" => null, "request" => null, "response" => null];
