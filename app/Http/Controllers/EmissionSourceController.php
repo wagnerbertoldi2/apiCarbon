@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmissionSourceRequest;
+use App\Models\EmissionFactorModel;
 use Illuminate\Http\Request;
 use App\Models\EmissionSourceModel;
 
 class EmissionSourceController extends Controller{
     public function set(EmissionSourceRequest $request){
-        $emissionSource = new EmissionSourceModel();
-        $periodId= EmissionSourceModel::find($request->EmissionFactorId)->PeriodId;
+        $periodId= EmissionFactorModel::find($request->EmissionFactorId)->PeriodId;
 
+        $emissionSource = new EmissionSourceModel();
         $emissionSource->Name = $request->Name;
         $emissionSource->EmissionFactorId = $request->EmissionFactorId;
         $emissionSource->PropertyId = $request->PropertyId;
