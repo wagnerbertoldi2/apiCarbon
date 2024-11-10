@@ -131,7 +131,6 @@ class UserController extends Controller{
     public function SendEmailResetPassword(Request $request){
         $email= $request->email;
         $user= DB::table("users")->where("email",$email)->first();
-        dd($user, $request->email);
 
         if(empty($user->email)){
             Mail::to($email)->send(new CodigoNumericoEmail($user));
