@@ -14,6 +14,7 @@ class RandomNumberController{
         DB::table('coderesetpassword')->insert([
             "code" => $code,
             "iduser" => $userId,
+            "status" => 2,
             "created_at"=> date("Y-m-d H:i:s")
         ]);
 
