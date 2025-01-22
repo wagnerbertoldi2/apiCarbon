@@ -17,7 +17,7 @@ class AdminAuth {
     public function handle(Request $request, Closure $next) {
         // Verifica se o usuário está autenticado
         if (!Auth::check()) {
-            return redirect("https://cadastro.prisma.com.br");
+            return redirect("https://cadastro.geoware.net.br");
         }
 
         // Verifica se o idprofile do usuário é 1

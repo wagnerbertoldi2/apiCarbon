@@ -73,7 +73,9 @@ Route::post('vincula-dados', [\App\Http\Controllers\ImportController::class, 'da
 Route::get('get-dados', [\App\Http\Controllers\ImportController::class, 'listDadosImportados'])->middleware('auth.admin');
 Route::get('get-dados-importes', [\App\Http\Controllers\ImportController::class, 'listaImportes'])->middleware('auth.admin');
 Route::get('get-dados-linha', [\App\Http\Controllers\ImportController::class, 'getDadosLinhaImporte'])->middleware('auth.admin');
-Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->middleware('auth.admin');
+Route::post('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->middleware('jwt.auth');
+Route::get('dashboard-users', [\App\Http\Controllers\DashboardController::class, 'dashboardListUsers'])->middleware('jwt.auth');
+Route::get('dashboard-profile-user', [\App\Http\Controllers\DashboardController::class, 'dashboardProfileUser'])->middleware('jwt.auth');
 
 Route::post('testList', [\App\Http\Controllers\EmissionController::class, 'getList']);
 
