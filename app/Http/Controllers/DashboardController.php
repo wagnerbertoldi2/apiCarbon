@@ -30,7 +30,7 @@ class DashboardController extends Controller{
     public function dashboardListUsers(Request $request){
         $user = Auth::user();
         if($user->idprofile == 1) {
-            $users= User::all()->orderBy('FirstName', 'asc')->get();
+            $users = User::orderBy('FirstName', 'asc')->get();
             return response()->json($users, 201);
         } else {
             return response()->json([], 201);
