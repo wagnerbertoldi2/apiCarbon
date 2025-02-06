@@ -16,6 +16,7 @@ class EmissionController extends Controller{
 
         if(!empty($file)) {
             $originalExtension = $file->getClientOriginalExtension();
+            $originalName = $file->getClientOriginalName();
             $tempPath = $file->getRealPath();
 
             if (!file_exists($tempPath)) {
@@ -26,7 +27,8 @@ class EmissionController extends Controller{
             $nameFile= basename($tempPath) . '.' . $file->getClientOriginalExtension();
 
             if ($originalExtension == 'pdf') {
-                $path = $request->file('attachment')->store('attachments');
+                $nameFile = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $originalExtension;
+                $path = $request->file('attachment')->store('attachments', $nameFile, 'local');
             } else {
                 if (file_exists($tempPath)) {
                     $img = Image::make($tempPath)->resize(1000, null, function ($constraint) {
@@ -36,12 +38,6 @@ class EmissionController extends Controller{
                 } else {
                     return response()->json(["msg" => 'Arquivo não encontrado: ' . $tempPath], 401);
                 }
-
-                $quality = 90;
-                do {
-                    $img->encode('jpg', $quality);
-                    $quality -= 5;
-                } while ($img->filesize() > 350 * 1024 && $quality > 0);
 
                 $nameFile= basename($tempPath) . '.' . $file->getClientOriginalExtension();
                 $path = $request->file('attachment')->storeAs('attachments', $nameFile , 'local');
