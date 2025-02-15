@@ -13,7 +13,7 @@ class DashboardController extends Controller{
         $user = Auth::user();
 
         if (!$user) {
-            return response()->json(['error' => 'Usuário não autenticado'], 201);
+            return response()->json(['error' => 'Usuário não autenticado'], 401);
         }
 
         if ($user->idprofile == 1) {
