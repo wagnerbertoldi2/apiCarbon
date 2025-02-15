@@ -209,7 +209,22 @@ class ImportController extends Controller{
         if($dados){
             return response()->json($dados, 200);
         } else {
-            return response()->json(['error' => 'Nenhum dado encontrado'], 201);
+            return response()->json([
+                        "bairro" => null,
+                        "cep" => null,
+                        "cidade" => null,
+                        "complemento" => null,
+                        "estado" => null,
+                        "id" => null,
+                        "importeId" => null,
+                        "link" => null,
+                        "logradouro" => null,
+                        "matricula" => null,
+                        "numero" => null,
+                        "propertyId" => null,
+                        "status" => null,
+                        "tipo_unidade" => null,
+                        ], 201);
         }
     }
 
