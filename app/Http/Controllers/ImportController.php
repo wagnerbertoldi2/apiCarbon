@@ -209,7 +209,7 @@ class ImportController extends Controller{
         if($dados){
             return response()->json($dados, 200);
         } else {
-            return response()->json(['error' => 'Nenhum dado encontrado'], 401);
+            return response()->json(['error' => 'Nenhum dado encontrado'], 201);
         }
     }
 
