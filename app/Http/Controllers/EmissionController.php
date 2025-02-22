@@ -14,7 +14,7 @@ class EmissionController extends Controller{
     public function set(Request $request){
         $file = $request->file('attachment');
 
-        if(!empty($file)) {
+        if (!empty($file)) {
             $originalExtension = $file->getClientOriginalExtension();
             $originalName = $file->getClientOriginalName();
             $tempPath = $file->getRealPath();
@@ -23,25 +23,36 @@ class EmissionController extends Controller{
                 return response()->json(["msg" => 'Arquivo não encontrado: ' . $tempPath], 401);
             }
 
-            $tempPath = $file->getRealPath();
-            $nameFile= basename($tempPath) . '.' . $file->getClientOriginalExtension();
+            // Gera um nome único para o arquivo
+            $nameFile = uniqid() . '_' . time() . '.' . $originalExtension;
 
             if ($originalExtension == 'pdf') {
-                $nameFile = pathinfo($originalName, PATHINFO_FILENAME) . '_' . time() . '.' . $originalExtension;
-                $path = $request->file('attachment')->store('attachments', $nameFile, 'local');
+                try {
+                    // Salva PDF diretamente
+                    $path = Storage::disk('local')->putFileAs(
+                        'attachments',
+                        $file,
+                        $nameFile
+                    );
+                } catch (\Exception $e) {
+                    return response()->json(["msg" => 'Erro ao salvar PDF: ' . $e->getMessage()], 500);
+                }
             } else {
-                if (file_exists($tempPath)) {
+                try {
+                    // Processa e salva imagem
                     $img = Image::make($tempPath)->resize(1000, null, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     });
-                } else {
-                    return response()->json(["msg" => 'Arquivo não encontrado: ' . $tempPath], 401);
-                }
 
-                $nameFile= basename($tempPath) . '.' . $file->getClientOriginalExtension();
-                $path = $request->file('attachment')->storeAs('attachments', $nameFile , 'local');
-                Storage::put($path, (string) $img);
+                    // Salva a imagem processada
+                    Storage::disk('local')->put(
+                        'attachments/' . $nameFile,
+                        $img->encode()
+                    );
+                } catch (\Exception $e) {
+                    return response()->json(["msg" => 'Erro ao processar imagem: ' . $e->getMessage()], 500);
+                }
             }
         }
 
