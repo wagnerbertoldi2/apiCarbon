@@ -283,13 +283,15 @@ class EmissionController extends Controller{
 
     public function deleteFonteEmissao(Request $request){
         $emission = EmissionModel::find($request->id);
-        //dd($emission->created_at, $emission->created_at->diffInMinutes(), $emission->created_at->diffInMinutes() < 15);
 
         if($emission->created_at->diffInMinutes() > 15){
             return response()->json(["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."], 201);
         } else {
-            $nomeArquivo = $emission->Attachment;
-            Storage::disk('local')->delete($nomeArquivo);
+            if ($emission->Attachment) {
+                if (Storage::disk('local')->exists($emission->Attachment)) {
+                    Storage::disk('local')->delete($emission->Attachment);
+                }
+            }
 
             $emission->delete();
             DB::connection("mysqlSimulation")->table("simulation")->where("EmissionId", $request->id)->delete();
