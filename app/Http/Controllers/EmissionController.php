@@ -125,7 +125,8 @@ class EmissionController extends Controller{
                     'ES.Name as factor',
                     DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'),
                     'E.created_at',
-                    DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated")
+                    DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated"),
+                    DB::raw("CONVERT_TZ(E.created_at, '+00:00', '-03:00') as dataExcluir")
                 )
                 ->leftJoin('emissionsource AS ES', 'ES.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period AS P', 'P.id', '=', 'ES.PeriodId')
@@ -148,7 +149,8 @@ class EmissionController extends Controller{
                     'S.Name as factor',
                     DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'),
                     'E.created_at',
-                    DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated")
+                    DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated"),
+                    DB::raw("CONVERT_TZ(E.created_at, '+00:00', '-03:00') as dataExcluir")
                 )
                 ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
@@ -171,7 +173,8 @@ class EmissionController extends Controller{
                     'S.Name as factor',
                     DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'),
                     'E.created_at',
-                    DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated")
+                    DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated"),
+                    DB::raw("CONVERT_TZ(E.created_at, '+00:00', '-03:00') as dataExcluir")
                 )
                 ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
