@@ -281,16 +281,45 @@ class EmissionController extends Controller{
         return response()->json($emission, 200);
     }
 
-    public function deleteFonteEmissao(Request $request){
+    public function deleteFonteEmissao(Request $request)
+    {
         $emission = EmissionModel::find($request->id);
-        //dd($emission->created_at, $emission->created_at->diffInMinutes(), $emission->created_at->diffInMinutes() < 15);
-        return response()->json([$emission], 200);
-        if($emission->created_at->diffInMinutes() > 15){
-            return response()->json(["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."], 201);
-        } else {
+
+        if (!$emission) {
+            return response()->json(["msg" => "Registro não encontrado."], 404);
+        }
+
+        if ($emission->created_at->diffInMinutes() > 15) {
+            return response()->json([
+                "msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."
+            ], 201);
+        }
+
+        try {
+            // Verifica se existe um arquivo anexado
+            if ($emission->attachment) {
+                // Remove o arquivo físico
+                $filePath = 'attachments/' . $emission->attachment;
+                if (Storage::disk('local')->exists($filePath)) {
+                    Storage::disk('local')->delete($filePath);
+                }
+            }
+
+            // Deleta o registro da emissão
             $emission->delete();
-            DB::connection("mysqlSimulation")->table("simulation")->where("EmissionId", $request->id)->delete();
-            return response()->json(true, 200);
+
+            // Deleta registros relacionados na tabela de simulação
+            DB::connection("mysqlSimulation")
+                ->table("simulation")
+                ->where("EmissionId", $request->id)
+                ->delete();
+
+            return response()->json(["msg" => "Registro excluído com sucesso."], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "msg" => "Erro ao excluir registro: " . $e->getMessage()
+            ], 500);
         }
     }
+
 }
