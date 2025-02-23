@@ -294,41 +294,27 @@ class EmissionController extends Controller{
         }
 
         try {
-            // Log para debug
-            \Log::info('Iniciando exclusão do arquivo');
-            \Log::info('Nome do arquivo: ' . $emission->Attachment);
-
             if ($emission->Attachment) {
-                // Obtém o caminho completo do arquivo
-                $filePath = storage_path('app/' . $emission->Attachment);
+                // Ajustando o caminho para incluir a pasta attachments
+                $filePath = storage_path('app/attachments/' . $emission->Attachment);
 
-                \Log::info('Caminho completo do arquivo: ' . $filePath);
+                \Log::info('Tentando excluir arquivo:', [
+                    'arquivo' => $emission->Attachment,
+                    'caminho_completo' => $filePath
+                ]);
 
-                // Verifica se o arquivo existe usando File facade
                 if (File::exists($filePath)) {
-                    // Tenta excluir usando File facade
                     File::delete($filePath);
-                    \Log::info('Arquivo excluído com File facade');
-                } else {
-                    \Log::warning('Arquivo não encontrado no caminho: ' . $filePath);
+                    \Log::info('Arquivo excluído com sucesso');
                 }
 
-                // Tenta também usando Storage facade
-                if (Storage::disk('local')->exists($emission->Attachment)) {
-                    Storage::disk('local')->delete($emission->Attachment);
-                    \Log::info('Arquivo excluído com Storage facade');
-                } else {
-                    \Log::warning('Arquivo não encontrado no Storage');
-                }
-
-                // Tenta excluir usando unlink
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                    \Log::info('Arquivo excluído com unlink');
+                // Ajustando o caminho no Storage também
+                if (Storage::disk('local')->exists('attachments/' . $emission->Attachment)) {
+                    Storage::disk('local')->delete('attachments/' . $emission->Attachment);
+                    \Log::info('Arquivo excluído do storage com sucesso');
                 }
             }
 
-            // Deleta o registro e as simulações
             $emission->delete();
             DB::connection("mysqlSimulation")
                 ->table("simulation")
