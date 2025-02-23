@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\EmissionModel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\SimulationController;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
 
 class EmissionController extends Controller{
     public function set(Request $request){
@@ -282,18 +282,12 @@ class EmissionController extends Controller{
         return response()->json($emission, 200);
     }
 
-    public function deleteFonteEmissao(Request $request)
-    {
+    public function deleteFonteEmissao(Request $request){
         $emission = EmissionModel::find($request->id);
 
-        if ($emission->created_at->diffInMinutes() > 15) {
-            return response()->json(
-                ["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."],
-                201
-            );
-        }
-
-        try {
+        if($emission->created_at->diffInMinutes() > 15){
+            return response()->json(["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."], 201);
+        } else {
             if ($emission->Attachment) {
                 // Ajustando o caminho para incluir a pasta attachments
                 $filePath = storage_path('app/attachments/' . $emission->Attachment);
@@ -316,19 +310,8 @@ class EmissionController extends Controller{
             }
 
             $emission->delete();
-            DB::connection("mysqlSimulation")
-                ->table("simulation")
-                ->where("EmissionId", $request->id)
-                ->delete();
-
-            return response()->json(["msg" => "Registro excluído com sucesso"], 200);
-        } catch (\Exception $e) {
-            \Log::error('Erro ao excluir arquivo: ' . $e->getMessage());
-            return response()->json(
-                ["msg" => "Erro ao excluir arquivo: " . $e->getMessage()],
-                500
-            );
+            DB::connection("mysqlSimulation")->table("simulation")->where("EmissionId", $request->id)->delete();
+            return response()->json(true, 200);
         }
     }
-
 }
