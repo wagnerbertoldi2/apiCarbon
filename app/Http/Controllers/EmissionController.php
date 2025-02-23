@@ -281,21 +281,67 @@ class EmissionController extends Controller{
         return response()->json($emission, 200);
     }
 
-    public function deleteFonteEmissao(Request $request){
+    public function deleteFonteEmissao(Request $request)
+    {
         $emission = EmissionModel::find($request->id);
 
-        if($emission->created_at->diffInMinutes() > 15){
-            return response()->json(["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."], 201);
-        } else {
+        if ($emission->created_at->diffInMinutes() > 15) {
+            return response()->json(
+                ["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."],
+                201
+            );
+        }
+
+        try {
+            // Log para debug
+            \Log::info('Iniciando exclusão do arquivo');
+            \Log::info('Nome do arquivo: ' . $emission->Attachment);
+
             if ($emission->Attachment) {
+                // Obtém o caminho completo do arquivo
+                $filePath = storage_path('app/' . $emission->Attachment);
+
+                \Log::info('Caminho completo do arquivo: ' . $filePath);
+
+                // Verifica se o arquivo existe usando File facade
+                if (File::exists($filePath)) {
+                    // Tenta excluir usando File facade
+                    File::delete($filePath);
+                    \Log::info('Arquivo excluído com File facade');
+                } else {
+                    \Log::warning('Arquivo não encontrado no caminho: ' . $filePath);
+                }
+
+                // Tenta também usando Storage facade
                 if (Storage::disk('local')->exists($emission->Attachment)) {
                     Storage::disk('local')->delete($emission->Attachment);
+                    \Log::info('Arquivo excluído com Storage facade');
+                } else {
+                    \Log::warning('Arquivo não encontrado no Storage');
+                }
+
+                // Tenta excluir usando unlink
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                    \Log::info('Arquivo excluído com unlink');
                 }
             }
 
+            // Deleta o registro e as simulações
             $emission->delete();
-            DB::connection("mysqlSimulation")->table("simulation")->where("EmissionId", $request->id)->delete();
-            return response()->json(true, 200);
+            DB::connection("mysqlSimulation")
+                ->table("simulation")
+                ->where("EmissionId", $request->id)
+                ->delete();
+
+            return response()->json(["msg" => "Registro excluído com sucesso"], 200);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao excluir arquivo: ' . $e->getMessage());
+            return response()->json(
+                ["msg" => "Erro ao excluir arquivo: " . $e->getMessage()],
+                500
+            );
         }
     }
+
 }
