@@ -115,18 +115,18 @@ class EmissionController extends Controller{
     public function get(Request $request){
         if($request->has('EmissionSourceId') && $request->has('propertyId')){
             $emission = DB::table('emission AS E')
-                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/files/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'ES.Name as factor', DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'), 'E.created_at')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/files/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'ES.Name as factor', DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'), 'E.created_at', DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated") )
                 ->leftJoin('emissionsource AS ES', 'ES.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period AS P', 'P.id', '=', 'ES.PeriodId')
                 ->leftJoin('property AS PP', 'PP.id', '=', 'ES.PropertyId')
                 ->where('ES.PropertyId', '=', $request->propertyId)
                 ->where('E.EmissionSourceId', '=', $request->EmissionSourceId)
-                ->orderBy('E.created_at', 'desc')
+                ->orderBy('E.created_at', DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated") , 'desc')
                 ->get();
             return response()->json($emission, 200);
         } elseif($request->has('EmissionSourceId')){
             $emission = DB::table('emission as E')
-                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/files/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'S.Name as factor', DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'), 'E.created_at')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', DB::raw('concat("'.url('/').'/files/", E.Attachment) as urlDoComprovante'), 'P.Name as period', 'PP.Name as property', 'S.Name as factor', DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'), 'E.created_at', DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated") )
                 ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
                 ->leftJoin('property as PP', 'PP.id', '=', 'S.PropertyId')
@@ -136,7 +136,7 @@ class EmissionController extends Controller{
             return response()->json($emission, 200);
         } else {
             $emission = DB::table('emission as E')
-                ->select('E.id', 'E.Amount', 'E.Attachment as file', 'P.Name as period', DB::raw('concat("'.url('/').'/files/", E.Attachment) as urlDoComprovante'), 'PP.Name as property', 'S.Name as factor', DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'), 'E.created_at')
+                ->select('E.id', 'E.Amount', 'E.Attachment as file', 'P.Name as period', DB::raw('concat("'.url('/').'/files/", E.Attachment) as urlDoComprovante'), 'PP.Name as property', 'S.Name as factor', DB::raw('if(P.`Name`="Anual",E.Year,if(P.`Name`="Mensal",concat(E.`Month`,"/",E.Year),concat(E.Semester,"/",E.Year))) as periodRef'), 'E.created_at', DB::raw("DATE_FORMAT(CONVERT_TZ(E.created_at, '+00:00', '-03:00'), '%d/%m/%Y %H:%i:%s') as dataFormated") )
                 ->leftJoin('emissionsource as S', 'S.id', '=', 'E.EmissionSourceId')
                 ->leftJoin('period as P', 'P.id', '=', 'S.PeriodId')
                 ->leftJoin('property as PP', 'PP.id', '=', 'S.PropertyId')
