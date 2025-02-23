@@ -288,6 +288,9 @@ class EmissionController extends Controller{
         if($emission->created_at->diffInMinutes() > 15){
             return response()->json(["msg" => "Não é permitido excluir o registro após 15 minutos de sua criação."], 201);
         } else {
+            $nomeArquivo = $emission->Attachment;
+            Storage::disk('local')->delete($nomeArquivo);
+
             $emission->delete();
             DB::connection("mysqlSimulation")->table("simulation")->where("EmissionId", $request->id)->delete();
             return response()->json(true, 200);
